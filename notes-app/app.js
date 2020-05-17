@@ -13,4 +13,4 @@ const message = getNotes();
 console.log(message);
 
 // The methods come from the https://www.npmjs.com/package/chalk documentation
-console.log(chalk.greenBright.bold.inverse("Success!"));
+console.log(chalk.red.bold.inverse("Error!"));

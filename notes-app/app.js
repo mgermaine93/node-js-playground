@@ -1,10 +1,3 @@
-// Challenge:  Use the Chalk Library in your project
-// 1. Install version 2.4.1 of Chalk
-// 2. Load Chalk into app.js
-// 3. Use it to print the string "Success!" into the console in green text
-// 4. Test your work
-// Bonus:  Make text bold and inversed
-
 const chalk = require("chalk");
 const getNotes = require("./notes.js");
 
@@ -13,4 +6,17 @@ const message = getNotes();
 console.log(message);
 
 // The methods come from the https://www.npmjs.com/package/chalk documentation
-console.log(chalk.red.bold.inverse("Error!"));
+console.log(chalk.blueBright.bold.inverse("Success!"));
+
+// Prints out "argument vector", or an array of all of the arguments provided.  Two paths are always provided:  the first is the path to the Node.js executable on the machine, the second is the path to the Node.js file.  Any additional values will be ones you provide.
+console.log(process.argv[2]);
+
+const command = process.argv[2];
+
+console.log(process.argv);
+
+if (command === "add") {
+  console.log("Adding a note!");
+} else if (command === "remove") {
+  console.log("Removing note!");
+}

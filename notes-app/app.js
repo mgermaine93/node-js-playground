@@ -1,22 +1,45 @@
 const chalk = require("chalk");
+const yargs = require("yargs");
 const getNotes = require("./notes.js");
 
-// Calls the function itself
-const message = getNotes();
-console.log(message);
+// Customize yargs version
+yargs.version("1.1.0");
 
-// The methods come from the https://www.npmjs.com/package/chalk documentation
-console.log(chalk.blueBright.bold.inverse("Success!"));
+// Create add command
+yargs.command({
+  command: "add",
+  describe: "Adds a new note",
+  handler: function () {
+    console.log("Adding a new note");
+  },
+});
 
-// Prints out "argument vector", or an array of all of the arguments provided.  Two paths are always provided:  the first is the path to the Node.js executable on the machine, the second is the path to the Node.js file.  Any additional values will be ones you provide.
-console.log(process.argv[2]);
+// Create remove command
+yargs.command({
+  command: "remove",
+  describe: "Removes a new note",
+  handler: function () {
+    console.log("Removing a note");
+  },
+});
 
-const command = process.argv[2];
+// Create list command
+yargs.command({
+  command: "list",
+  describe: "Lists out notes",
+  handler: function () {
+    console.log("This lists out all notes");
+  },
+});
 
-console.log(process.argv);
+// Create read command
+yargs.command({
+  command: "read",
+  describe: "Reads a note",
+  handler: function () {
+    console.log("This reads a note");
+  },
+});
 
-if (command === "add") {
-  console.log("Adding a note!");
-} else if (command === "remove") {
-  console.log("Removing note!");
-}
+// The version of process.argv that yargs has parsed.
+console.log(yargs.argv);

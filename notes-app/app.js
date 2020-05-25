@@ -9,8 +9,21 @@ yargs.version("1.1.0");
 yargs.command({
   command: "add",
   describe: "Adds a new note",
-  handler: function () {
-    console.log("Adding a new note");
+  builder: {
+    title: {
+      describe: "Note title",
+      demandOption: true, // Makes the title mandatory in order for the program to run
+      type: "string",
+    },
+    body: {
+      describe: "Note body",
+      demandOption: true,
+      type: "string",
+    },
+  },
+  handler: function (argv) {
+    console.log("Title: " + argv.title);
+    console.log("Body: " + argv.body);
   },
 });
 
@@ -41,5 +54,8 @@ yargs.command({
   },
 });
 
+// Parses the arguments
+yargs.parse();
+
 // The version of process.argv that yargs has parsed.
-console.log(yargs.argv);
+// console.log(yargs.argv);

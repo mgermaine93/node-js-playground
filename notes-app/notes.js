@@ -7,12 +7,24 @@ const getNotes = function () {
 const addNote = function (title, body) {
   const notes = loadNotes();
 
-  notes.push({
-    title: title,
-    body: body,
+  // Check to see if there are any duplicate notes
+  // The array will have zero items if no duplicate items are found
+  const duplicateNotes = notes.filter(function (note) {
+    return note.title === title;
   });
 
-  saveNotes(notes);
+  if (duplicateNotes.length === 0) {
+    notes.push({
+      title: title,
+      body: body,
+    });
+    saveNotes(notes);
+    console.log("New note added!");
+  } else {
+    console.log(
+      "Unfortunately, that note title is already being used.  Please write a new note."
+    );
+  }
 };
 
 const saveNotes = function (notes) {

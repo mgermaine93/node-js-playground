@@ -4,6 +4,7 @@ const getNotes = function () {
   return "Your notes...";
 };
 
+// Add note function
 const addNote = function (title, body) {
   const notes = loadNotes();
 
@@ -26,6 +27,8 @@ const addNote = function (title, body) {
     );
   }
 };
+
+const removeNote = function (title) {};
 
 const saveNotes = function (notes) {
   const dataJSON = JSON.stringify(notes);

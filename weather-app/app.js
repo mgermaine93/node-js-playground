@@ -1,11 +1,16 @@
-console.log("Starting");
+const request = require("request");
 
-setTimeout(() => {
-  console.log("2-second timer");
-}, 2000); // # of milliseconds you want to wait before the callback is executed
+// API key
+const url =
+  "https://api.data.gov/ed/collegescorecard/v1/schools?api_key=NGSqAMa4p7cmXliXfrMMsNrFo8tNQCydFkl7SpHx";
 
-setTimeout(() => {
-  console.log("0-second timer");
-}, 0); // run the function right away
+// "we would like to parse this request as json"
+request({ url: url, json: true }, (error, response) => {
+  // const data = JSON.parse(response.body);
+  // console.log(data.results[0]);
+  console.log(
+    response.body.results[10].latest.aid.median_debt.completers.overall // what year does 10 represent?
+  );
+});
 
-console.log("Stopping");
+// .debt.median_debt.completers.overall

@@ -8,7 +8,8 @@ const url = "https://pokeapi.co/api/v2/pokemon";
 
 // "we would like to parse this request as json"
 request({ url: url, json: true }, (error, response) => {
-  console.log(response.body.results);
+  // Gets Bulbasaur
+  console.log(response.body.results[0].name);
   // const data = JSON.parse(response.body);
   // console.log(data.results[0]);
   // console.log(

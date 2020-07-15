@@ -25,7 +25,13 @@ MongoClient.connect(
       );
     }
 
-    // If no error occurs, then it is a successful connection
-    console.log("Connection successful!");
+    // This is a reference to the database we want to manipulate
+    const db = client.db(databaseName);
+
+    // This inserts a single document into the "books" collection
+    db.collection("books").insertOne({
+      title: "East of Eden",
+      author: "John Steinbeck",
+    });
   }
 );

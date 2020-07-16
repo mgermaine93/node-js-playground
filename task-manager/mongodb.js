@@ -1,15 +1,18 @@
 // CRUD = Create, Read, Update, Delete
 
-const mongodb = require("mongodb");
-
-// This creates the mongo client, which gives us access to the function necessary to connect to the database and perform CRUD operations
-const MongoClient = mongodb.MongoClient;
+// Destructuring (shorthand for grabbing stuff off of mongodb)
+const { MongoClient, ObjectID } = require("mongodb");
 
 // This is the connection point (Protocol, IP Address, Port)
 const connectionURL = "mongodb://127.0.0.1:27017";
 
 // This is the database we'll connect to
 const databaseName = "task-manager";
+
+// Generates a new ID
+const id = new ObjectID();
+console.log(id.id.length);
+console.log(id.toHexString());
 
 // This connects to the server and parses the URLs correctly
 MongoClient.connect(
@@ -32,8 +35,8 @@ MongoClient.connect(
     // // insertOne() is asynchronous
     // db.collection("books").insertOne(
     //   {
-    //     title: "East of Eden",
-    //     author: "John Steinbeck",
+    //     title: "The Shipping News",
+    //     author: "E. Annie Proulx",
     //     // "result" returns the data and the document id if things go well
     //   },
     //   (error, result) => {
@@ -65,28 +68,29 @@ MongoClient.connect(
     //   }
     // );
 
-    // Course challenge
-    db.collection("tasks").insertMany(
-      [
-        {
-          description: "Practice piano.",
-          completed: true,
-        },
-        {
-          description: "Email website folks.",
-          completed: false,
-        },
-        {
-          description: "Run",
-          completed: true,
-        },
-      ],
-      (error, result) => {
-        if (error) {
-          return console.log("Unable to insert tasks!");
-        }
-        console.log(result.ops);
-      }
-    );
+    // // Course challenge
+    // db.collection("tasks").insertMany(
+    //   [
+    //     {
+    //       description: "Practice piano.",
+    //       completed: true,
+    //     },
+    //     {
+    //       description: "Email website folks.",
+    //       completed: false,
+    //     },
+    //     {
+    //       description: "Run",
+    //       completed: true,
+    //     },
+    //   ],
+    //   (error, result) => {
+    //     if (error) {
+    //       return console.log("Unable to insert tasks!");
+    //     }
+    //     // Prints the operation output
+    //     console.log(result.ops);
+    //   }
+    // );
   }
 );

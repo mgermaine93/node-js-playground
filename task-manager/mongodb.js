@@ -24,26 +24,44 @@ MongoClient.connect(
     // This is a reference to the database we want to manipulate
     const db = client.db(databaseName);
 
-    db.collection("tasks").findOne(
-      // Gets the last task in the tasks database
-      { _id: new ObjectID("5f10c03709aa9728dd9a1dd0") },
+    // db.collection("books")
+    //   .updateOne(
+    //     {
+    //       // Targets E. Annie Proulx in Robo 3T
+    //       _id: new ObjectID("5f10c6da2255c52a352b9fef"),
+    //     },
+    //     {
+    //       // This sets new fields in the given document
+    //       $set: {
+    //         title: "Accordion Crimes",
+    //       },
+    //     }
+    //   )
+    //   .then((result) => {
+    //     console.log(result);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
 
-      (error, task) => {
-        if (error) {
-          return console.log("Unable to fetch task");
-        }
-        console.log(task);
-      }
-    );
-
-    // Gets all tasks that haven't been completed
     db.collection("tasks")
-      .find({ completed: false })
-      .toArray((error, tasks) => {
-        if (error) {
-          return console.log("There are no tasks that haven't been completed.");
+      .updateMany(
+        {
+          // This looks for all tasks where "completed" is "false"...
+          completed: false,
+        },
+        {
+          // And this sets those uncompleted tasks to "true"
+          $set: {
+            completed: true,
+          },
         }
-        console.log(tasks);
+      )
+      .then((result) => {
+        console.log(result.modifiedCount);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }
 );

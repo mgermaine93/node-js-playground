@@ -25,18 +25,9 @@ MongoClient.connect(
     const db = client.db(databaseName);
 
     // db.collection("books")
-    //   .updateOne(
-    //     {
-    //       // Targets E. Annie Proulx in Robo 3T
-    //       _id: new ObjectID("5f10c6da2255c52a352b9fef"),
-    //     },
-    //     {
-    //       // This sets new fields in the given document
-    //       $set: {
-    //         title: "Accordion Crimes",
-    //       },
-    //     }
-    //   )
+    //   .deleteMany({
+    //     author: "John Steinbeck",
+    //   })
     //   .then((result) => {
     //     console.log(result);
     //   })
@@ -45,20 +36,11 @@ MongoClient.connect(
     //   });
 
     db.collection("tasks")
-      .updateMany(
-        {
-          // This looks for all tasks where "completed" is "false"...
-          completed: false,
-        },
-        {
-          // And this sets those uncompleted tasks to "true"
-          $set: {
-            completed: true,
-          },
-        }
-      )
+      .deleteOne({
+        description: "Email website folks.",
+      })
       .then((result) => {
-        console.log(result.modifiedCount);
+        console.log(result);
       })
       .catch((error) => {
         console.log(error);

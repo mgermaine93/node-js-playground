@@ -9,25 +9,29 @@ mongoose.connect("mongodb://127.0.0.1:27017/task-manager-api", {
 });
 
 // Defines the model.  First argument is the name of the model, second argument is the fields you want
-const Book = mongoose.model("Book", {
-  title: {
+const Task = mongoose.model("task", {
+  description: {
     type: String,
   },
-  author: {
-    type: String,
+  completed: {
+    type: Boolean,
   },
 });
 
-const theShippingNews = new Book({
-  title: "The Shipping News",
-  author: "E. Annie Proulx",
+// Actually creates a new task in the database
+const task = new Task({
+  description: "Cook delicious chili dinner.",
+  completed: false,
 });
 
-theShippingNews
+// Error handling
+task
   .save()
+  // When things go well
   .then(() => {
-    console.log(theShippingNews);
+    console.log(task);
   })
+  // When things don't go well
   .catch((error) => {
     console.log("Error!", error);
   });

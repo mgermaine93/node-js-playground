@@ -9,78 +9,90 @@ mongoose.connect("mongodb://127.0.0.1:27017/task-manager-api", {
   useCreateIndex: true,
 });
 
-// Defines the model.  First argument is the name of the model, second argument is the fields you want
-const Book = mongoose.model("book", {
-  title: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  authorEmail: {
-    type: String,
-    required: true,
-    trim: true,
-    lowercase: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("Email is invalid");
-      }
-    },
-  },
-  author: {
-    type: String,
-    default: "Unknown",
-    validate(value) {
-      if (value != "Markus Zusak") {
-        throw new Error("Author must be Markus Zusak!");
-      }
-    },
-  },
-});
-
-// Actually creates a new task in the database
-const book = new Book({
-  title: "    I Am The Messenger   ",
-  author: "Markus Zusak",
-  authorEmail: "zusak@books.com",
-});
-
-// Error handling
-book
-  .save()
-  // When things go well
-  .then(() => {
-    console.log(book);
-  })
-  // When things don't go well
-  .catch((error) => {
-    console.log("Error!", error);
-  });
-
 // // Defines the model.  First argument is the name of the model, second argument is the fields you want
-// const Task = mongoose.model("task", {
-//   description: {
+
+// const User = mongoose.model("User", {
+//   name: {
 //     type: String,
+//     require: true,
+//     trim: true,
 //   },
-//   completed: {
-//     type: Boolean,
+//   email: {
+//     type: String,
+//     required: true,
+//     trim: true,
+//     lowercase: true,
+//     validate(value) {
+//       if (!validator.isEmail(value)) {
+//         throw new Error("Email is invalid!");
+//       }
+//     },
+//   },
+//   password: {
+//     type: String,
+//     required: true,
+//     minlength: 7,
+//     trim: true,
+//     validate(value) {
+//       if (value.toLowerCase().includes("password")) {
+//         throw new Error('Password cannot contain "password');
+//       }
+//     },
+//   },
+//   age: {
+//     type: Number,
+//     default: 0,
+//     validate(value) {
+//       if (value < 0) {
+//         throw new Error("Age must be a positive number!");
+//       }
+//     },
 //   },
 // });
 
-// // Actually creates a new task in the database
-// const task = new Task({
-//   description: "Cook delicious chili dinner.",
-//   completed: false,
+// const me = new User({
+//   name: "Ben Folds",
+//   email: "folds@folds.com",
+//   password: "       comePickMeUpI'veLanded    ",
 // });
 
 // // Error handling
-// task
-//   .save()
+// me.save()
 //   // When things go well
 //   .then(() => {
-//     console.log(task);
+//     console.log(me);
 //   })
 //   // When things don't go well
 //   .catch((error) => {
 //     console.log("Error!", error);
 //   });
+
+// Defines the model.  First argument is the name of the model, second argument is the fields you want
+const Task = mongoose.model("task", {
+  description: {
+    type: String,
+    trim: true,
+    require: true,
+  },
+  completed: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+// Actually creates a new task in the database
+const task = new Task({
+  description: "Cook delicious chili dinner.",
+});
+
+// Error handling
+task
+  .save()
+  // When things go well
+  .then(() => {
+    console.log(task);
+  })
+  // When things don't go well
+  .catch((error) => {
+    console.log("Error!", error);
+  });

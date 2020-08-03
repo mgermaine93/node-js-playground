@@ -7,6 +7,7 @@ const port = process.env.PORT || 3000; // If the first port doesn't work, use lo
 
 app.use(express.json());
 
+// Create
 app.post("/users", (request, response) => {
   const user = new User(request.body);
   user
@@ -19,6 +20,33 @@ app.post("/users", (request, response) => {
     });
 });
 
+// Read // Gets all users stored in the database
+app.get("/users", (request, response) => {
+  User.find({})
+    .then((users) => {
+      response.send(users);
+    })
+    .catch((error) => {
+      response.status(500).send();
+    });
+});
+
+// Read // Gets individual users by ID
+app.get("/users/:id", (request, response) => {
+  const _id = request.params.id;
+  User.findById(_id)
+    .then((user) => {
+      if (!user) {
+        return response.status(404).send(); // if no user is found, send a 404 error
+      }
+      response.send(user);
+    })
+    .catch((error) => {
+      response.status(500).send();
+    });
+});
+
+// Create
 app.post("/tasks", (request, response) => {
   const task = new Task(request.body);
   task

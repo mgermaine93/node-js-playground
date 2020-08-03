@@ -59,6 +59,34 @@ app.post("/tasks", (request, response) => {
     });
 });
 
+// Create // Get all tasks stored in the database
+app.get("/tasks", (request, response) => {
+  Task.find({})
+    .then((tasks) => {
+      response.send(tasks);
+    })
+    .catch((error) => {
+      response.status(500).send();
+    });
+});
+
+// Read // Gets individual tasks by ID
+app.get("/tasks/:id", (request, response) => {
+  const _id = request.params.id;
+  Task.findById(_id)
+    .then((task) => {
+      if (!task) {
+        return response.status(404).send(); // if no task is found, send a 404 error
+      }
+      response.send(task);
+    })
+    .catch((error) => {
+      response.status(500).send();
+    });
+});
+
+// Create // Get individual tasks by ID
+
 app.listen(port, () => {
   console.log("Server is up on port " + port);
 });

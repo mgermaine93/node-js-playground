@@ -1,7 +1,7 @@
 // Connects to the database
 require("../src/db/mongoose");
 
-// Grabs the model
+// Grabs the user model
 const User = require("../src/models/user");
 
 // Updates the user with the provided ID's age to 1

@@ -7,86 +7,84 @@ const port = process.env.PORT || 3000; // If the first port doesn't work, use lo
 
 app.use(express.json());
 
-// Create
-app.post("/users", (request, response) => {
+////////////////////// USERS /////////////////////////
+
+// Create a user
+app.post("/users", async (request, response) => {
   const user = new User(request.body);
-  user
-    .save()
-    .then(() => {
-      response.send(201).send(user); // Sends the user back if one is there
-    })
-    .catch((error) => {
-      response.status(400).send(error); // Sets a custom response code
-    });
+
+  try {
+    // Awaits the promise that comes back from calling the save method
+    await user.save();
+    response.status(201).send(user);
+  } catch (error) {
+    response.status(400).send(error);
+  }
 });
 
 // Read // Gets all users stored in the database
-app.get("/users", (request, response) => {
-  User.find({})
-    .then((users) => {
-      response.send(users);
-    })
-    .catch((error) => {
-      response.status(500).send();
-    });
+app.get("/users", async (request, response) => {
+  try {
+    const users = await User.find({});
+    response.status(201).send(users);
+  } catch (error) {
+    response.status(500).send();
+  }
 });
 
 // Read // Gets individual users by ID
-app.get("/users/:id", (request, response) => {
+app.get("/users/:id", async (request, response) => {
   const _id = request.params.id;
-  User.findById(_id)
-    .then((user) => {
-      if (!user) {
-        return response.status(404).send(); // if no user is found, send a 404 error
-      }
-      response.send(user);
-    })
-    .catch((error) => {
-      response.status(500).send();
-    });
+  try {
+    const user = await User.findById(_id);
+    if (!user) {
+      return response.status(404).send(); // if no user is found, send a 404 error
+    }
+    response.send(user);
+  } catch (error) {
+    response.status(500).send();
+  }
 });
 
-// Create
-app.post("/tasks", (request, response) => {
+/////////////////////////// TASKS //////////////////////////////
+
+// Create a task
+app.post("/tasks", async (request, response) => {
   const task = new Task(request.body);
-  task
-    .save()
-    .then(() => {
-      response.status(201).send(task); // Send the task back if one is there
-    })
-    .catch((error) => {
-      response.status(400).send(error); // Sets a custom error code
-    });
+
+  try {
+    await task.save();
+    response.status(201).send(task);
+  } catch (error) {
+    response.status(400).send(error);
+  }
 });
 
-// Create // Get all tasks stored in the database
-app.get("/tasks", (request, response) => {
-  Task.find({})
-    .then((tasks) => {
-      response.send(tasks);
-    })
-    .catch((error) => {
-      response.status(500).send();
-    });
+// Read // Get all tasks stored in the database
+app.get("/tasks", async (request, response) => {
+  try {
+    const tasks = await Task.find({});
+    response.send(tasks);
+  } catch (error) {
+    response.status(500).send();
+  }
 });
 
 // Read // Gets individual tasks by ID
-app.get("/tasks/:id", (request, response) => {
+app.get("/tasks/:id", async (request, response) => {
   const _id = request.params.id;
-  Task.findById(_id)
-    .then((task) => {
-      if (!task) {
-        return response.status(404).send(); // if no task is found, send a 404 error
-      }
-      response.send(task);
-    })
-    .catch((error) => {
-      response.status(500).send();
-    });
+  try {
+    const task = await Task.findById(_id);
+    if (!task) {
+      return response.status(404).send(); // if no task is found, return a 404 error
+    }
+    response.send(task);
+  } catch (error) {
+    response.status(500).send();
+  }
 });
 
-// Create // Get individual tasks by ID
-
+// Prints out the port that the server is on when the nodemon is up and running
 app.listen(port, () => {
   console.log("Server is up on port " + port);
 });

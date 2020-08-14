@@ -36,7 +36,7 @@ add(1, 1)
   .then((sum2) => {
     console.log(sum2);
   })
-  // This occurs when neither of the above are fulfilled
+  // This occurs when neither of the above work
   .catch((error) => {
     console.log(error);
   });

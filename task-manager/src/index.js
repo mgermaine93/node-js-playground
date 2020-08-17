@@ -46,6 +46,41 @@ app.get("/users/:id", async (request, response) => {
   }
 });
 
+// Patch updates an existing resource
+// Here we update an individual user by his/her ID
+app.patch("/users/:id", async (request, response) => {
+  const updates = Object.keys(request.body);
+  const allowedUpdates = ["name", "email", "password", "age"];
+  // Runs a function for every item in the array
+  // If EVERYTHING is true, the function will return true
+  // If SOMETHING is false, the function will return false
+  const isValidOperation = updates.every((update) => {
+    return allowedUpdates.includes(update);
+  });
+
+  if (!isValidOperation) {
+    return response
+      .status(400)
+      .send({ error: "Some of those updates were invalid!" });
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(request.params.id, request.body, {
+      new: true, // returns the original user with the updates applied
+      runValidators: true, // ensures that data arrives in the expected format
+    });
+    if (!user) {
+      // If the user doesn't exist, send a 404 error
+      return response.status(404).send();
+    }
+    // If everything goes well, send back the current (updated) user data
+    response.send(user);
+  } catch (error) {
+    // If something goes wrong, send back the error message
+    response.status(400).send(error);
+  }
+});
+
 /////////////////////////// TASKS //////////////////////////////
 
 // Create a task

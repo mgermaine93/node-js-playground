@@ -1,3 +1,5 @@
+///////////////////// CONSTANTS /////////////////////
+
 const express = require("express");
 require("./db/mongoose"); // This ensures a connection to the database
 const User = require("./models/user");
@@ -116,6 +118,39 @@ app.get("/tasks/:id", async (request, response) => {
     response.send(task);
   } catch (error) {
     response.status(500).send();
+  }
+});
+
+// Patch updates an existing resource
+// Here we update an individual task by its ID
+app.patch("/tasks/:id", async (request, response) => {
+  // Converts the object to an array of properties
+  const updates = Object.keys(request.body);
+  const allowedUpdates = ["description", "completed"];
+  const isValidOperation = updates.every((update) => {
+    return allowedUpdates.includes(update);
+  });
+
+  if (!isValidOperation) {
+    return response
+      .status(400)
+      .send({ error: "Some of those updates were invalid!" });
+  }
+
+  try {
+    const task = await Task.findByIdAndUpdate(request.params.id, request.body, {
+      new: true, // returns the original user with the updates applied
+      runValidators: true, // ensures that data arrives in the expected format
+    });
+    if (!task) {
+      // If the user doesn't exist, send a 404 error
+      return response.status(404).send();
+    }
+    // If everything goes well, send back the current (updated) user data
+    response.send(task);
+  } catch (error) {
+    // If something goes wrong, send back the error message
+    response.status(400).send(error);
   }
 });
 

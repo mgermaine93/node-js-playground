@@ -83,6 +83,20 @@ app.patch("/users/:id", async (request, response) => {
   }
 });
 
+// Delete a user
+app.delete("/users/:id", async (request, response) => {
+  try {
+    const user = await User.findByIdAndDelete(request.params.id);
+    if (!user) {
+      return response.status(404).send();
+    }
+    // Sends the deleted user as the response body
+    response.send(user);
+  } catch (error) {
+    response.status(500).send();
+  }
+});
+
 /////////////////////////// TASKS //////////////////////////////
 
 // Create a task
@@ -151,6 +165,20 @@ app.patch("/tasks/:id", async (request, response) => {
   } catch (error) {
     // If something goes wrong, send back the error message
     response.status(400).send(error);
+  }
+});
+
+// Delete a task
+app.delete("/tasks/:id", async (request, response) => {
+  try {
+    const task = await Task.findByIdAndDelete(request.params.id);
+    if (!task) {
+      return response.status(404).send();
+    }
+    // Sends the deleted task as the response body
+    response.send(task);
+  } catch (error) {
+    response.status(500).send();
   }
 });
 

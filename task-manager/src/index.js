@@ -20,3 +20,19 @@ app.use(taskRouter); // <-- Register the task router... important!
 app.listen(port, () => {
   console.log("Server is up on port " + port);
 });
+
+const bcrypt = require("bcryptjs");
+
+const myFunction = async () => {
+  const password = "randomPassword!";
+  // Hashing algorithms are one-way algorithms... they cannot be reversed by design
+  // 8 represents the ideal number of rounds the hashing algorithm runs
+  const hashedPassword = await bcrypt.hash(password, 8); // returns a promise
+  console.log(password);
+  console.log(hashedPassword);
+
+  const isMatch = await bcrypt.compare(password, hashedPassword); // also returns a promise
+  console.log(isMatch);
+};
+
+myFunction();

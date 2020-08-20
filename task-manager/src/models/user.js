@@ -1,12 +1,11 @@
 // DEFINES THE USER MODEL //
 
-// Imports Mongoose and Validator
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
-// Defines the model.  First argument is the name of the model, second argument is the fields you want
-
-const User = mongoose.model("User", {
+// Using schema permits access to middleware necessary for hashing, etc.
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     require: true,
@@ -44,6 +43,21 @@ const User = mongoose.model("User", {
     },
   },
 });
+
+// First argument is name of the event, second argument is the function to run
+// Arrow functions don't bind "this"
+userSchema.pre("save", async function (next) {
+  // this = the individual user (document) that is about to be saved
+  const user = this;
+
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+
+  next(); // <-- important!!
+});
+
+const User = mongoose.model("User", userSchema);
 
 // This actually creates the new users
 module.exports = User;

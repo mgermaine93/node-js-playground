@@ -46,9 +46,16 @@ router.patch("/tasks/:id", async (request, response) => {
   // Converts the object to an array of properties
   const updates = Object.keys(request.body);
   const allowedUpdates = ["description", "completed"];
-  const isValidOperation = updates.every((update) => {
-    return allowedUpdates.includes(update);
-  });
+  const isValidOperation = updates.every((update) =>
+    allowedUpdates.includes(update)
+  );
+
+  const task = await Task.findById(request.params.id);
+
+  // Dynamic updating
+  updates.forEach((update) => (task[update] = request.body[update]));
+
+  await task.save();
 
   if (!isValidOperation) {
     return response

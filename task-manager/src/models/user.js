@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    unique: true, // ensures that email addresses are unique
     required: true,
     trim: true,
     lowercase: true,
@@ -44,8 +45,21 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// First argument is name of the event, second argument is the function to run
-// Arrow functions don't bind "this"
+// For logging in, it's best practice to provide a single vague error statement
+userSchema.statics.findByCredentials = async (email, password) => {
+  // Try to find the user by email address
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error("Unable to log in");
+  }
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new Error("Unable to log in");
+  }
+  return user;
+};
+
+// Hash the plaintext password before saving
 userSchema.pre("save", async function (next) {
   // this = the individual user (document) that is about to be saved
   const user = this;

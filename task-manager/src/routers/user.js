@@ -17,6 +17,18 @@ router.post("/users", async (request, response) => {
   }
 });
 
+router.post("/users/login", async (request, response) => {
+  try {
+    const user = await User.findByCredentials(
+      request.body.email,
+      request.body.password
+    );
+    response.send(user);
+  } catch (error) {
+    response.status(400).send();
+  }
+});
+
 // Read // Gets all users stored in the database
 router.get("/users", async (request, response) => {
   try {

@@ -3,6 +3,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // Using schema permits access to middleware necessary for hashing, etc.
 const userSchema = new mongoose.Schema({
@@ -43,7 +44,27 @@ const userSchema = new mongoose.Schema({
       }
     },
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
+
+// No arrow functions so "this" can be used
+userSchema.methods.generateAuthToken = async function () {
+  const user = this;
+  const token = jwt.sign({ _id: user._id.toString() }, "newSignatureGoesHere");
+
+  // Saves tokens to the database
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
+
+  return token;
+};
 
 // For logging in, it's best practice to provide a single vague error statement
 userSchema.statics.findByCredentials = async (email, password) => {

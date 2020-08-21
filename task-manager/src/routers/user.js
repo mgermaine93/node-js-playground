@@ -11,7 +11,8 @@ router.post("/users", async (request, response) => {
   try {
     // Awaits the promise that comes back from calling the save method
     await user.save();
-    response.status(201).send(user);
+    const token = await user.generateAuthToken();
+    response.status(201).send({ user, token });
   } catch (error) {
     response.status(400).send(error);
   }
@@ -23,7 +24,8 @@ router.post("/users/login", async (request, response) => {
       request.body.email,
       request.body.password
     );
-    response.send(user);
+    const token = await user.generateAuthToken();
+    response.send({ user, token });
   } catch (error) {
     response.status(400).send();
   }

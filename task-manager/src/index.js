@@ -12,6 +12,25 @@ const app = express();
 // If the first port doesn't work, use local port 3000
 const port = process.env.PORT || 3000;
 
+// // only "next" is specific to middleware
+// // If "next" isn't called, the middleware won't run
+// app.use((request, response, next) => {
+//   if (request.method === "GET") {
+//     response.send("GET requests are disabled.");
+//   } else {
+//     next();
+//   }
+// });
+
+// Middleware function challenge
+app.use((request, response, next) => {
+  response
+    .status(503)
+    .send(
+      "Site is currently under maintenance.  Please check back again soon!"
+    );
+});
+
 app.use(express.json());
 app.use(userRouter); // <-- Registers the user router... important!
 app.use(taskRouter); // <-- Register the task router... important!
@@ -25,12 +44,6 @@ app.listen(port, () => {
 const jwt = require("jsonwebtoken");
 
 const myFunction = async () => {
-  // const password = "randomPassword!";
-  // // Hashing algorithms are one-way algorithms... they cannot be reversed by design
-  // // 8 represents the ideal number of rounds the hashing algorithm runs
-  // const hashedPassword = await bcrypt.hash(password, 8); // returns a promise
-  // console.log(password);
-  // console.log(hashedPassword);
   const token = jwt.sign({ _id: "dummyId" }, "newSignatureGoesHere", {
     expiresIn: "7 days",
   });

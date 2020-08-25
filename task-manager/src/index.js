@@ -22,14 +22,14 @@ const port = process.env.PORT || 3000;
 //   }
 // });
 
-// Middleware function challenge
-app.use((request, response, next) => {
-  response
-    .status(503)
-    .send(
-      "Site is currently under maintenance.  Please check back again soon!"
-    );
-});
+// // Middleware function challenge
+// app.use((request, response, next) => {
+//   response
+//     .status(503)
+//     .send(
+//       "Site is currently under maintenance.  Please check back again soon!"
+//     );
+// });
 
 app.use(express.json());
 app.use(userRouter); // <-- Registers the user router... important!

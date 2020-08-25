@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../models/user");
+const auth = require("../middleware/authentication");
 const router = new express.Router();
 
 ////////////////////// USERS /////////////////////////
@@ -31,14 +32,9 @@ router.post("/users/login", async (request, response) => {
   }
 });
 
-// Read // Gets all users stored in the database
-router.get("/users", async (request, response) => {
-  try {
-    const users = await User.find({});
-    response.status(201).send(users);
-  } catch (error) {
-    response.status(500).send();
-  }
+// Read // Gets a user's own profile when they're authenticated
+router.get("/users/me", auth, async (request, response) => {
+  response.send(request.user);
 });
 
 // Read // Gets individual users by ID

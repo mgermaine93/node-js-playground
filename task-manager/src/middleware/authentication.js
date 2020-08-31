@@ -16,6 +16,7 @@ const auth = async (request, response, next) => {
       throw new Error();
     }
     // Runs the route handler
+    request.token = token;
     request.user = user;
     next();
   } catch (error) {

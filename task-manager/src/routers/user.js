@@ -19,6 +19,7 @@ router.post("/users", async (request, response) => {
   }
 });
 
+// Login
 router.post("/users/login", async (request, response) => {
   try {
     const user = await User.findByCredentials(
@@ -29,6 +30,31 @@ router.post("/users/login", async (request, response) => {
     response.send({ user, token });
   } catch (error) {
     response.status(400).send();
+  }
+});
+
+// Logout
+router.post("/users/logout", auth, async (request, response) => {
+  try {
+    request.user.tokens = request.user.tokens.filter((token) => {
+      return token.token !== request.token;
+    });
+    await request.user.save();
+    response.send();
+  } catch (error) {
+    response.status(500).send();
+  }
+});
+
+// Logout All
+router.post("/users/logoutAll", auth, async (request, response) => {
+  try {
+    // Set the tokens to an empty array
+    request.user.tokens = [];
+    await request.user.save();
+    response.send();
+  } catch (error) {
+    response.status(500).send();
   }
 });
 

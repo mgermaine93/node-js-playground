@@ -22,20 +22,20 @@ router.post("/tasks", auth, async (request, response) => {
 });
 
 // Read // Get all tasks stored in the database
-router.get("/tasks", async (request, response) => {
+router.get("/tasks", auth, async (request, response) => {
   try {
-    const tasks = await Task.find({});
-    response.send(tasks);
+    await request.user.populate("tasks").execPopulate();
+    response.send(request.user.tasks);
   } catch (error) {
     response.status(500).send();
   }
 });
 
 // Read // Gets individual tasks by ID
-router.get("/tasks/:id", async (request, response) => {
+router.get("/tasks/:id", auth, async (request, response) => {
   const _id = request.params.id;
   try {
-    const task = await Task.findById(_id);
+    const task = await Task.findOne({ _id, owner: request.user._id });
     if (!task) {
       return response.status(404).send(); // if no task is found, return a 404 error
     }
@@ -47,20 +47,13 @@ router.get("/tasks/:id", async (request, response) => {
 
 // Patch updates an existing resource
 // Here we update an individual task by its ID
-router.patch("/tasks/:id", async (request, response) => {
+router.patch("/tasks/:id", auth, async (request, response) => {
   // Converts the object to an array of properties
   const updates = Object.keys(request.body);
   const allowedUpdates = ["description", "completed"];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
-
-  const task = await Task.findById(request.params.id);
-
-  // Dynamic updating
-  updates.forEach((update) => (task[update] = request.body[update]));
-
-  await task.save();
 
   if (!isValidOperation) {
     return response
@@ -69,14 +62,25 @@ router.patch("/tasks/:id", async (request, response) => {
   }
 
   try {
-    const task = await Task.findByIdAndUpdate(request.params.id, request.body, {
-      new: true, // returns the original user with the updates applied
-      runValidators: true, // ensures that data arrives in the expected format
+    const task = await Task.findOne({
+      _id: request.params.id,
+      owner: request.user._id,
     });
+
     if (!task) {
       // If the user doesn't exist, send a 404 error
       return response.status(404).send();
     }
+
+    // Dynamic updating
+    updates.forEach((update) => (task[update] = request.body[update]));
+    await task.save();
+
+    // const task = await Task.findByIdAndUpdate(request.params.id, request.body, {
+    //   new: true, // returns the original user with the updates applied
+    //   runValidators: true, // ensures that data arrives in the expected format
+    // });
+
     // If everything goes well, send back the current (updated) user data
     response.send(task);
   } catch (error) {
@@ -86,9 +90,12 @@ router.patch("/tasks/:id", async (request, response) => {
 });
 
 // Delete a task
-router.delete("/tasks/:id", async (request, response) => {
+router.delete("/tasks/:id", auth, async (request, response) => {
   try {
-    const task = await Task.findByIdAndDelete(request.params.id);
+    const task = await Task.findOneAndDelete({
+      _id: request.params.id,
+      owner: request.user._id,
+    });
     if (!task) {
       return response.status(404).send();
     }

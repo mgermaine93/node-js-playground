@@ -54,6 +54,18 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
+// This function obscures the hashed passwords and tokens from view in the response...
+// Function is called in the user.js model
+userSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
+
+  delete userObject.password;
+  delete userObject.tokens;
+
+  return userObject;
+};
+
 // No arrow functions so "this" can be used
 userSchema.methods.generateAuthToken = async function () {
   const user = this;

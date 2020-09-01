@@ -40,20 +40,14 @@ app.listen(port, () => {
   console.log("Server is up on port " + port);
 });
 
-// const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-
-const myFunction = async () => {
-  const token = jwt.sign({ _id: "dummyId" }, "newSignatureGoesHere", {
-    expiresIn: "7 days",
-  });
-  console.log(token);
-
-  const data = jwt.verify(token, "newSignatureGoesHere");
-  console.log(data);
-
-  // const isMatch = await bcrypt.compare(password, hashedPassword); // also returns a promise
-  // console.log(isMatch);
+// When we pass an object to respond.send, they get "stringified"
+const pet = {
+  name: "Jessie",
 };
 
-myFunction();
+pet.toJSON = function () {
+  console.log(this);
+  return this;
+};
+
+console.log(JSON.stringify(pet));

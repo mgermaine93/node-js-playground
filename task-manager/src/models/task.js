@@ -4,7 +4,7 @@
 const mongoose = require("mongoose");
 
 // Defines the model.  First argument is the name of the model, second argument is the fields you want
-const Task = mongoose.model("task", {
+const Task = mongoose.model("Task", {
   description: {
     type: String,
     trim: true,
@@ -13,6 +13,13 @@ const Task = mongoose.model("task", {
   completed: {
     type: Boolean,
     default: false,
+  },
+  owner: {
+    // Says that the data stored in owner is going to be an object
+    type: mongoose.Schema.Types.ObjectId,
+    // Each task must have an owner
+    required: true,
+    ref: "User",
   },
 });
 

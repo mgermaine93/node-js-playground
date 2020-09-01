@@ -12,25 +12,6 @@ const app = express();
 // If the first port doesn't work, use local port 3000
 const port = process.env.PORT || 3000;
 
-// // only "next" is specific to middleware
-// // If "next" isn't called, the middleware won't run
-// app.use((request, response, next) => {
-//   if (request.method === "GET") {
-//     response.send("GET requests are disabled.");
-//   } else {
-//     next();
-//   }
-// });
-
-// // Middleware function challenge
-// app.use((request, response, next) => {
-//   response
-//     .status(503)
-//     .send(
-//       "Site is currently under maintenance.  Please check back again soon!"
-//     );
-// });
-
 app.use(express.json());
 app.use(userRouter); // <-- Registers the user router... important!
 app.use(taskRouter); // <-- Register the task router... important!
@@ -40,14 +21,18 @@ app.listen(port, () => {
   console.log("Server is up on port " + port);
 });
 
-// When we pass an object to respond.send, they get "stringified"
-const pet = {
-  name: "Jessie",
+const Task = require("./models/task");
+const User = require("./models/user");
+
+const main = async () => {
+  // const task = await Task.findById("5f4eab702039b2f6f8e64fe6");
+  // // Goes off to find the user associated with the task's id
+  // await task.populate("owner").execPopulate();
+  // console.log(task.owner);
+
+  const user = await User.findById("5f4eaa681030f8f68e069f4a");
+  await user.populate("tasks").execPopulate();
+  console.log(user.tasks);
 };
 
-pet.toJSON = function () {
-  console.log(this);
-  return this;
-};
-
-console.log(JSON.stringify(pet));
+main();

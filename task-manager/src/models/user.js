@@ -54,6 +54,14 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
+// localField is a relationship between the user's id and the task owner field
+// This is not actually stored in the database
+userSchema.virtual("tasks", {
+  ref: "Task",
+  localField: "_id",
+  foreignField: "owner",
+});
+
 // This function obscures the hashed passwords and tokens from view in the response...
 // Function is called in the user.js model
 userSchema.methods.toJSON = function () {

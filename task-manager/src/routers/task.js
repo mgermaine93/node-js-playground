@@ -2,11 +2,16 @@
 
 const express = require("express");
 const Task = require("../models/task");
+const auth = require("../middleware/authentication");
 const router = new express.Router();
 
 // Create a task
-router.post("/tasks", async (request, response) => {
-  const task = new Task(request.body);
+router.post("/tasks", auth, async (request, response) => {
+  const task = new Task({
+    // ES6 spread operator
+    ...request.body,
+    owner: request.user._id,
+  });
 
   try {
     await task.save();

@@ -63,23 +63,9 @@ router.get("/users/me", auth, async (request, response) => {
   response.send(request.user);
 });
 
-// Read // Gets individual users by ID
-router.get("/users/:id", async (request, response) => {
-  const _id = request.params.id;
-  try {
-    const user = await User.findById(_id);
-    if (!user) {
-      return response.status(404).send(); // if no user is found, send a 404 error
-    }
-    response.send(user);
-  } catch (error) {
-    response.status(500).send();
-  }
-});
-
 // Patch updates an existing resource
-// Here we update an individual user by his/her ID
-router.patch("/users/:id", async (request, response) => {
+// Here we update an individual user by his/her ID ... allows users to update their profiles
+router.patch("/users/me", auth, async (request, response) => {
   const updates = Object.keys(request.body);
   const allowedUpdates = ["name", "email", "password", "age"];
   // Runs a function for every item in the array
@@ -96,34 +82,24 @@ router.patch("/users/:id", async (request, response) => {
   }
 
   try {
-    const user = await User.findById(request.params.id);
-
     // Dynamic updating
-    updates.forEach((update) => (user[update] = request.body[update]));
+    updates.forEach((update) => (request.user[update] = request.body[update]));
+    await request.user.save();
 
-    await user.save();
-
-    if (!user) {
-      // If the user doesn't exist, send a 404 error
-      return response.status(404).send();
-    }
     // If everything goes well, send back the current (updated) user data
-    response.send(user);
+    response.send(request.user);
   } catch (error) {
     // If something goes wrong, send back the error message
     response.status(400).send(error);
   }
 });
 
-// Delete a user
-router.delete("/users/:id", async (request, response) => {
+// Allows a user to delete their own profile
+router.delete("/users/me", auth, async (request, response) => {
   try {
-    const user = await User.findByIdAndDelete(request.params.id);
-    if (!user) {
-      return response.status(404).send();
-    }
+    await request.user.remove();
     // Sends the deleted user as the response body
-    response.send(user);
+    response.send(request.user);
   } catch (error) {
     response.status(500).send();
   }

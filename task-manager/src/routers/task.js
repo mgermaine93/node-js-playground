@@ -24,11 +24,18 @@ router.post("/tasks", auth, async (request, response) => {
 // Read // Get all tasks stored in the database (sends back an array of data -- big!)
 // GET /tasks?completed=true/false
 // GET /tasks?limit=10&skip=10
+// GET /tasks?sortBy=createdAt_desc
 router.get("/tasks", auth, async (request, response) => {
   const match = {};
+  const sort = {};
 
   if (request.query.completed) {
     match.completed = request.query.completed === "true";
+  }
+
+  if (request.query.sortBy) {
+    const parts = request.query.sortBy.split(":");
+    sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
   }
 
   try {
@@ -40,6 +47,7 @@ router.get("/tasks", auth, async (request, response) => {
         options: {
           limit: parseInt(request.query.limit),
           skip: parseInt(request.query.skip),
+          sort,
         },
       })
       .execPopulate();

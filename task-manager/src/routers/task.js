@@ -23,6 +23,7 @@ router.post("/tasks", auth, async (request, response) => {
 
 // Read // Get all tasks stored in the database (sends back an array of data -- big!)
 // GET /tasks?completed=true/false
+// GET /tasks?limit=10&skip=10
 router.get("/tasks", auth, async (request, response) => {
   const match = {};
 
@@ -36,6 +37,10 @@ router.get("/tasks", auth, async (request, response) => {
         path: "tasks",
         // These are the tasks we're trying to match
         match,
+        options: {
+          limit: parseInt(request.query.limit),
+          skip: parseInt(request.query.skip),
+        },
       })
       .execPopulate();
     response.send(request.user.tasks);

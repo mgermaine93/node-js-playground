@@ -21,10 +21,23 @@ router.post("/tasks", auth, async (request, response) => {
   }
 });
 
-// Read // Get all tasks stored in the database
+// Read // Get all tasks stored in the database (sends back an array of data -- big!)
+// GET /tasks?completed=true/false
 router.get("/tasks", auth, async (request, response) => {
+  const match = {};
+
+  if (request.query.completed) {
+    match.completed = request.query.completed === "true";
+  }
+
   try {
-    await request.user.populate("tasks").execPopulate();
+    await request.user
+      .populate({
+        path: "tasks",
+        // These are the tasks we're trying to match
+        match,
+      })
+      .execPopulate();
     response.send(request.user.tasks);
   } catch (error) {
     response.status(500).send();

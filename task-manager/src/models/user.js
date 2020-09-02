@@ -7,53 +7,58 @@ const jwt = require("jsonwebtoken");
 const Task = require("./task");
 
 // Using schema permits access to middleware necessary for hashing, etc.
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    require: true,
-    trim: true,
-  },
-  email: {
-    type: String,
-    unique: true, // ensures that email addresses are unique
-    required: true,
-    trim: true,
-    lowercase: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("Email is invalid!");
-      }
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      require: true,
+      trim: true,
     },
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 7,
-    trim: true,
-    validate(value) {
-      if (value.toLowerCase().includes("password")) {
-        throw new Error('Password cannot contain "password');
-      }
-    },
-  },
-  age: {
-    type: Number,
-    default: 0,
-    validate(value) {
-      if (value < 0) {
-        throw new Error("Age must be a positive number!");
-      }
-    },
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
+    email: {
+      type: String,
+      unique: true, // ensures that email addresses are unique
+      required: true,
+      trim: true,
+      lowercase: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Email is invalid!");
+        }
       },
     },
-  ],
-});
+    password: {
+      type: String,
+      required: true,
+      minlength: 7,
+      trim: true,
+      validate(value) {
+        if (value.toLowerCase().includes("password")) {
+          throw new Error('Password cannot contain "password');
+        }
+      },
+    },
+    age: {
+      type: Number,
+      default: 0,
+      validate(value) {
+        if (value < 0) {
+          throw new Error("Age must be a positive number!");
+        }
+      },
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 // localField is a relationship between the user's id and the task owner field
 // This is not actually stored in the database

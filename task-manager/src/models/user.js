@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Task = require("./task");
 
 // Using schema permits access to middleware necessary for hashing, etc.
 const userSchema = new mongoose.Schema({
@@ -110,6 +111,14 @@ userSchema.pre("save", async function (next) {
   }
 
   next(); // <-- important!!
+});
+
+// Delete user tasks when user is removed
+userSchema.pre("remove", async function (next) {
+  const user = this;
+  // Comes from the query documentation
+  await Task.deleteMany({ owner: user._id });
+  next();
 });
 
 const User = mongoose.model("User", userSchema);

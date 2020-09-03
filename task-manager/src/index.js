@@ -15,6 +15,19 @@ const port = process.env.PORT || 3000;
 const multer = require("multer");
 const upload = multer({
   dest: "images",
+  limits: {
+    fileSize: 1000000, // size is in bytes
+  },
+  // Determines which file types are allowed
+  // cb = lets multer know when we're done filtering the file
+  fileFilter(request, file, cb) {
+    // Uses regex
+    if (!file.originalname.match(/\.(doc|docx)$/)) {
+      // This will run if the file is NOT a pdf
+      return cb(new Error("Please upload a Word document"));
+    }
+    cb(undefined, true);
+  },
 });
 
 // Configures the server to upload and save files

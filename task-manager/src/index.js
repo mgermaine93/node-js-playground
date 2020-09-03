@@ -12,6 +12,17 @@ const app = express();
 // If the first port doesn't work, use local port 3000
 const port = process.env.PORT || 3000;
 
+const multer = require("multer");
+const upload = multer({
+  dest: "images",
+});
+
+// Configures the server to upload and save files
+// Multer looks for the file named "upload" in the request
+app.post("/upload", upload.single("upload"), (request, response) => {
+  response.send();
+});
+
 app.use(express.json());
 app.use(userRouter); // <-- Registers the user router... important!
 app.use(taskRouter); // <-- Register the task router... important!
@@ -20,19 +31,3 @@ app.use(taskRouter); // <-- Register the task router... important!
 app.listen(port, () => {
   console.log("Server is up on port " + port);
 });
-
-const Task = require("./models/task");
-const User = require("./models/user");
-
-const main = async () => {
-  // const task = await Task.findById("5f4eab702039b2f6f8e64fe6");
-  // // Goes off to find the user associated with the task's id
-  // await task.populate("owner").execPopulate();
-  // console.log(task.owner);
-
-  const user = await User.findById("5f4eaa681030f8f68e069f4a");
-  await user.populate("tasks").execPopulate();
-  console.log(user.tasks);
-};
-
-main();

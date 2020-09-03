@@ -1,6 +1,8 @@
 const express = require("express");
+const multer = require("multer");
 const User = require("../models/user");
 const auth = require("../middleware/authentication");
+
 const router = new express.Router();
 
 ////////////////////// USERS /////////////////////////
@@ -104,5 +106,27 @@ router.delete("/users/me", auth, async (request, response) => {
     response.status(500).send();
   }
 });
+
+// Tells multer to store avatar photos in the "avatars" directory
+const upload = multer({
+  dest: "avatars",
+});
+
+router.post(
+  "/users/me/avatar",
+  // Tells multer to look for the "avatar" key in Postman, etc.
+  upload.single("avatar"),
+  (request, response) => {
+    response.status(200).send();
+  }
+);
+
+// const multer = require("multer");
+
+// Configures the server to upload and save files
+// Multer looks for the file named "upload" in the request
+// app.post("/upload", upload.single("upload"), (request, response) => {
+//   response.send();
+// });
 
 module.exports = router;

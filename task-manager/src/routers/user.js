@@ -110,6 +110,20 @@ router.delete("/users/me", auth, async (request, response) => {
 // Tells multer to store avatar photos in the "avatars" directory
 const upload = multer({
   dest: "avatars",
+  limits: {
+    fileSize: 1000000, // size is in bytes.  this restricts the upload size to one megabyte.
+  },
+  // Determines which file types are allowed
+  // cb = lets multer know when we're done filtering the file
+  fileFilter(request, file, cb) {
+    // Uses regex -- i is case-insensitive
+
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/i)) {
+      // This will run if the file is NOT an image
+      return cb(new Error("Please upload a .jpg, .jpeg, or .png document."));
+    }
+    cb(undefined, true);
+  },
 });
 
 router.post(

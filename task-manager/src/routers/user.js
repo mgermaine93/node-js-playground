@@ -110,7 +110,7 @@ router.delete("/users/me", auth, async (request, response) => {
 // Tells multer to store avatar photos in the "avatars" directory
 const upload = multer({
   limits: {
-    fileSize: 1000000, // size is in bytes.  this restricts the upload size to one megabyte.
+    fileSize: 5000000, // size is in bytes.  this restricts the upload size to five megabytes.
   },
   // Determines which file types are allowed
   // cb = lets multer know when we're done filtering the file
@@ -148,6 +148,21 @@ router.delete("/users/me/avatar", auth, async (request, response) => {
     response.send();
   } catch (error) {
     response.status(500).send();
+  }
+});
+
+// Access the image of a user by the user's id
+router.get("/users/:id/avatar", async (request, response) => {
+  try {
+    const user = await User.findById(request.params.id);
+    // If there is no user OR there is no user avatar field associated with the account
+    if (!user || !user.avatar) {
+      throw new Error();
+    }
+    response.set("Content-Type", "image/jpg");
+    response.send(user.avatar);
+  } catch (error) {
+    response.status(404).send();
   }
 });
 

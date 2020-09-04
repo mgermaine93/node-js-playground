@@ -29,12 +29,18 @@ const upload = multer({
     cb(undefined, true);
   },
 });
-
 // Configures the server to upload and save files
 // Multer looks for the file named "upload" in the request
-app.post("/upload", upload.single("upload"), (request, response) => {
-  response.send();
-});
+app.post(
+  "/upload",
+  upload.single("upload"),
+  (request, response) => {
+    response.send();
+  },
+  (error, request, response, next) => {
+    response.status(400).send({ error: error.message });
+  }
+);
 
 app.use(express.json());
 app.use(userRouter); // <-- Registers the user router... important!

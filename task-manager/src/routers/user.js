@@ -132,6 +132,9 @@ router.post(
   upload.single("avatar"),
   (request, response) => {
     response.status(200).send();
+  },
+  (error, request, response, next) => {
+    response.status(400).send({ error: error.message });
   }
 );
 

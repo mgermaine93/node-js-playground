@@ -109,7 +109,6 @@ router.delete("/users/me", auth, async (request, response) => {
 
 // Tells multer to store avatar photos in the "avatars" directory
 const upload = multer({
-  dest: "avatars",
   limits: {
     fileSize: 1000000, // size is in bytes.  this restricts the upload size to one megabyte.
   },
@@ -128,15 +127,29 @@ const upload = multer({
 
 router.post(
   "/users/me/avatar",
+  auth,
   // Tells multer to look for the "avatar" key in Postman, etc.
   upload.single("avatar"),
-  (request, response) => {
+  async (request, response) => {
+    request.user.avatar = request.file.buffer;
+    await request.user.save();
     response.status(200).send();
   },
   (error, request, response, next) => {
     response.status(400).send({ error: error.message });
   }
 );
+
+// Allows a user to delete their own avatar
+router.delete("/users/me/avatar", auth, async (request, response) => {
+  try {
+    request.user.avatar = undefined;
+    await request.user.save();
+    response.send();
+  } catch (error) {
+    response.status(500).send();
+  }
+});
 
 // const multer = require("multer");
 

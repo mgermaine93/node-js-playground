@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+const sharp = require("sharp");
 const User = require("../models/user");
 const auth = require("../middleware/authentication");
 
@@ -125,13 +126,20 @@ const upload = multer({
   },
 });
 
+// Creates/Updates a user's avatar
 router.post(
   "/users/me/avatar",
   auth,
   // Tells multer to look for the "avatar" key in Postman, etc.
   upload.single("avatar"),
   async (request, response) => {
-    request.user.avatar = request.file.buffer;
+    // Sharp is asynchronous
+    // Reformats the image before saving it
+    const buffer = await sharp(request.file.buffer)
+      .resize({ width: 250, height: 250 })
+      .png()
+      .toBuffer();
+    request.user.avatar = buffer;
     await request.user.save();
     response.status(200).send();
   },
@@ -140,7 +148,7 @@ router.post(
   }
 );
 
-// Allows a user to delete their own avatar
+// Delete -- a user can delete their own avatar
 router.delete("/users/me/avatar", auth, async (request, response) => {
   try {
     request.user.avatar = undefined;
@@ -151,7 +159,7 @@ router.delete("/users/me/avatar", auth, async (request, response) => {
   }
 });
 
-// Access the image of a user by the user's id
+// Reads a user's avatar
 router.get("/users/:id/avatar", async (request, response) => {
   try {
     const user = await User.findById(request.params.id);
@@ -159,7 +167,7 @@ router.get("/users/:id/avatar", async (request, response) => {
     if (!user || !user.avatar) {
       throw new Error();
     }
-    response.set("Content-Type", "image/jpg");
+    response.set("Content-Type", "image/png");
     response.send(user.avatar);
   } catch (error) {
     response.status(404).send();

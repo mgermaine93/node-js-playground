@@ -4,6 +4,7 @@ const sharp = require("sharp");
 const User = require("../models/user");
 const auth = require("../middleware/authentication");
 const { sendWelcomeEmail } = require("../emails/account");
+const { sendCancelEmail } = require("../emails/account");
 const router = new express.Router();
 
 ////////////////////// USERS /////////////////////////
@@ -15,7 +16,7 @@ router.post("/users", async (request, response) => {
   try {
     // Awaits the promise that comes back from calling the save method
     await user.save();
-    // Sends a welcome emails from account.js
+    // Sends welcome emails from the function in account.js
     sendWelcomeEmail(user.email, user.name);
     const token = await user.generateAuthToken();
     response.status(201).send({ user, token });
@@ -103,6 +104,8 @@ router.patch("/users/me", auth, async (request, response) => {
 router.delete("/users/me", auth, async (request, response) => {
   try {
     await request.user.remove();
+    // Sends cancelation emails from the function in account.js
+    sendCancelEmail(request.user.email, request.user.name);
     // Sends the deleted user as the response body
     response.send(request.user);
   } catch (error) {

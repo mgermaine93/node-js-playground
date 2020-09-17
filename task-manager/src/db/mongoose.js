@@ -3,8 +3,8 @@
 // Imports Mongoose and Validator
 const mongoose = require("mongoose");
 
-// Connects to the database
-mongoose.connect("mongodb://127.0.0.1:27017/task-manager-api", {
+// Connects to the database // environment variable
+mongoose.connect(process.env.MONGODB_URL.toString(), {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,

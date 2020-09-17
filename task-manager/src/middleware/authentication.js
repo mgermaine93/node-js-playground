@@ -6,7 +6,7 @@ const auth = async (request, response, next) => {
     // Gets the value for the header that the user provides
     const token = request.header("Authorization").replace("Bearer ", "");
     // Validates the header
-    const decoded = jwt.verify(token, "newSignatureGoesHere");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     // Finds the associated user
     const user = await User.findOne({
       _id: decoded._id,

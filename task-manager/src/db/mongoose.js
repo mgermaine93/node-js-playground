@@ -4,7 +4,7 @@
 const mongoose = require("mongoose");
 
 // Connects to the database // environment variable
-mongoose.connect(process.env.MONGODB_URL.toString(), {
+mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,

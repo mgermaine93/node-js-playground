@@ -23,7 +23,7 @@ test("Should signup a new user", async () => {
       email: "tony.delvecchio@backyardbaseball.com",
       password: "tonyLikesBaseball123",
     })
-    // We should expect it to be created
+    // We should expect the user to be created
     .expect(201);
 });
 

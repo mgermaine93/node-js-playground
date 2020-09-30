@@ -1,28 +1,11 @@
 const request = require("supertest"); // Supertest supports promises -> can use "await"
-const jwt = require("jsonwebtoken"); // Generates the JSON web token
-const mongoose = require("mongoose"); // Generates an object id
 const app = require("../src/app");
 const User = require("../src/models/user");
+// Object destructuring in action
+const { userOneId, userOne, setupDatabase } = require("./fixtures/db");
 
-const userOneId = new mongoose.Types.ObjectId();
-
-const userOne = {
-  _id: userOneId,
-  name: "Charles Campion",
-  email: "charles.campion@thestand.com",
-  password: "somethingNew123!",
-  tokens: [
-    {
-      token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET), // creates the JSON web token
-    },
-  ],
-};
-
-beforeEach(async () => {
-  // This will assure that users are deleted before Jest actually runs its tests
-  await User.deleteMany();
-  await new User(userOne).save();
-});
+// This will assure that users are deleted before Jest actually runs its tests
+beforeEach(setupDatabase);
 
 test("Should signup a new user", async () => {
   // This passes in the express application

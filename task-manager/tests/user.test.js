@@ -1,5 +1,6 @@
 const request = require("supertest"); // Supertest supports promises -> can use "await"
 const app = require("../src/app");
+const bcrypt = require("bcryptjs");
 const User = require("../src/models/user");
 // Object destructuring in action
 const { userOneId, userOne, setupDatabase } = require("./fixtures/db");
@@ -127,3 +128,69 @@ test("Should not update invalid user fields", async () => {
 // Should not update user if unauthenticated
 // Should not update user with invalid name/email/password
 // Should not delete user if unauthenticated
+
+test("Should not signup user with invalid name", async () => {
+  await request(app)
+    .post("/users/login")
+    .send({
+      name: "Charles Campion",
+      password: "This is a fake password",
+    })
+    .expect(400);
+});
+
+test("Should not signup user with invalid password", async () => {
+  await request(app)
+    .post("/users")
+    .send({
+      email: "Frannie Goldsmith",
+      password: "a",
+      email: "frannie.goldsmith@thestand.com",
+    })
+    .expect(400);
+});
+
+test("Should not signup user with invalid email", async () => {
+  await request(app)
+    .post("/users")
+    .send({
+      email: "Frannie Goldsmith",
+      password: "aFakePassword123!",
+      email: "franniegoldsmith",
+    })
+    .expect(400);
+});
+
+test("Should not update user if unauthenticated", async () => {
+  await request(app)
+    .patch("/users/me")
+    .send({
+      name: "sampleUser",
+    })
+    .expect(401);
+});
+
+test("Should not update user with invalid email", async () => {
+  await request(app)
+    .patch("/users/me")
+    // Authorization
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+    .send({ email: "fakeEmail" })
+    .expect(400);
+  // Asserts that the name has been changed from "Charles" to "Edwin"
+  const user = await User.findById(userOneId);
+  expect(user.name).not.toBe("fakeEmail");
+});
+
+test("Should not update user with invalid password", async () => {
+  await request(app)
+    .patch("/users/me")
+    // Authorization
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+    .send({ password: "password" })
+    .expect(400);
+  // Asserts that the name has been changed from "Charles" to "Edwin"
+  const user = await User.findById(userOneId);
+  const isSame = await bcrypt.compare("password", user.password);
+  expect(isSame).toBe(false);
+});

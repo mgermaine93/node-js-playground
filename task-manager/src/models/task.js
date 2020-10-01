@@ -11,6 +11,7 @@ const taskSchema = new mongoose.Schema(
       type: String,
       trim: true,
       require: true,
+      minlength: 3,
     },
     completed: {
       type: Boolean,

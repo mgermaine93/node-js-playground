@@ -21,8 +21,6 @@ const publicDirectoryPath = path.join(__dirname, "../public");
 
 app.use(express.static(publicDirectoryPath));
 
-let count = 0;
-
 // server (emit) -> client (receive) === countUpdated
 // client (emit) -> server (receive) === increment
 
@@ -31,13 +29,12 @@ io.on("connection", (socket) => {
   console.log("New web socket connection!");
 
   // Emit each event from the server to the client
-  socket.emit("countUpdated", count);
-
+  // The server emits "message" whenever a new client connects
+  socket.emit("message", "Welcome!");
   // Listen for the event ON THE SERVER from the client
-  socket.on("increment", () => {
-    count++;
-    // socket.emit("countUpdated", count); // Emits the event to a SINGLE connection
-    io.emit("countUpdated", count); // Emits the event to ALL connections
+  socket.on("sendMessage", (message) => {
+    // Emits the event to ALL connections
+    io.emit("message", message);
   });
 });
 

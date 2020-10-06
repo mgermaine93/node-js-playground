@@ -24,17 +24,25 @@ app.use(express.static(publicDirectoryPath));
 // server (emit) -> client (receive) === countUpdated
 // client (emit) -> server (receive) === increment
 
-// For each new connection, print a message
+// For each new CONNECTION, print a message
 io.on("connection", (socket) => {
   console.log("New web socket connection!");
 
-  // Emit each event from the server to the client
+  // Emit each event from the server to the SINGLE client
   // The server emits "message" whenever a new client connects
   socket.emit("message", "Welcome!");
+  // The server emits "message" to everyone BUT the client who just connected
+  socket.broadcast.emit("message", "A new user has joined the chat!");
+
   // Listen for the event ON THE SERVER from the client
   socket.on("sendMessage", (message) => {
     // Emits the event to ALL connections
     io.emit("message", message);
+  });
+  // "disconnect" is a built-in event
+  // "broadcast" is not needed because the disconnected client doesn't need the message
+  socket.on("disconnect", () => {
+    io.emit("message", "A user has left!");
   });
 });
 

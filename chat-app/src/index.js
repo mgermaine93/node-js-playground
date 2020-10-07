@@ -39,6 +39,15 @@ io.on("connection", (socket) => {
     // Emits the event to ALL connections
     io.emit("message", message);
   });
+
+  // Server listens for "sendLocation" and sends a message to all connected clients when fired
+  socket.on("sendLocation", (coords) => {
+    io.emit(
+      "message",
+      `https://google.com/maps?q=${coords.latitude},${coords.longitude}`
+    );
+  });
+
   // "disconnect" is a built-in event
   // "broadcast" is not needed because the disconnected client doesn't need the message
   socket.on("disconnect", () => {

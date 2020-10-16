@@ -1,3 +1,5 @@
+//// Client ////
+
 // Get the path to the folder
 const path = require("path");
 // Load in the HTTP core module
@@ -6,6 +8,8 @@ const http = require("http");
 const express = require("express");
 // Load in an instance of Socket.io ... this also sets up a file that can be served up
 const socketio = require("socket.io");
+// Load in bad-words
+const Filter = require("bad-words");
 
 // Call the express function to generate a new application
 const app = express();
@@ -35,17 +39,23 @@ io.on("connection", (socket) => {
   socket.broadcast.emit("message", "A new user has joined the chat!");
 
   // Listen for the event ON THE SERVER from the client
-  socket.on("sendMessage", (message) => {
+  socket.on("sendMessage", (message, callback) => {
+    const filter = new Filter();
+    if (filter.isProfane(message)) {
+      return callback("Profanity is not allowed.");
+    }
     // Emits the event to ALL connections
     io.emit("message", message);
+    callback("Delivered");
   });
 
   // Server listens for "sendLocation" and sends a message to all connected clients when fired
-  socket.on("sendLocation", (coords) => {
+  socket.on("sendLocation", (coords, callback) => {
     io.emit(
       "message",
       `https://google.com/maps?q=${coords.latitude},${coords.longitude}`
     );
+    callback();
   });
 
   // "disconnect" is a built-in event

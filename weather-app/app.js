@@ -9,18 +9,19 @@ if (!address) {
 } else {
   // Two arguments are typically passed in to callbacks: "error" and "data"/"response"
   // To change what city you're searching for, pass it in here
-  geocode(address, (error, data) => {
+  // Data is an object
+  geocode(address, (error, { latitude, longitude, location }) => {
     if (error) {
       return console.log(error);
     }
     // latitude, longitude, function
-    forecast(data.latitude, data.longitude, (error, forecastData) => {
+    forecast(latitude, longitude, (error, forecastData) => {
       // Callback chaining in action
       if (error) {
         return console.log(error);
       }
       // This is what runs if BOTH requests work successfully
-      console.log(data.location);
+      console.log(location);
       console.log(forecastData);
     });
   });

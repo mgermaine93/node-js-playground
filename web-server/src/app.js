@@ -9,22 +9,25 @@ const app = express();
 
 // Home page
 app.get("", (request, response) => {
-  response.send("This is the home page.");
+  response.send("<h1>This is the Home Page.</h1>");
 });
 
 // Help page
 app.get("/help", (request, response) => {
-  response.send("This is the help page.");
+  response.send("This is the Help Page.");
 });
 
 // About page
 app.get("/about", (request, response) => {
-  response.send("This is the about page.");
+  response.send("<h1>This is the About Page</h1>");
 });
 
 // Weather page
 app.get("/weather", (request, response) => {
-  response.send("This is the weather page.");
+  response.send({
+    forecast: "forecast",
+    location: "location",
+  });
 });
 
 // Has the app listen on a specific port

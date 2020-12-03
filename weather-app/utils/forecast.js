@@ -3,7 +3,7 @@ require("dotenv").config(); // Adds .dotenv references to the API keys.
 const weatherApiKey = process.env.WEATHER_API_KEY;
 
 const forecast = (latitude, longitude, callback) => {
-  const weatherUrl = `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${weatherApiKey}`;
+  const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${weatherApiKey}`;
 
   request({ url: weatherUrl, json: true }, (error, { body }) => {
     if (error) {

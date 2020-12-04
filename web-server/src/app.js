@@ -8,18 +8,40 @@ const express = require("express");
 const app = express();
 const publicDirectoryPath = path.join(__dirname, "../public");
 
+// This gets the "handlebars" module set up
+app.set("view engine", "hbs");
+
 // This serves up the contents of the public directory
 app.use(express.static(publicDirectoryPath));
 
 // this tells the server what to send back
 // first argument is the route, second argument is a function that describes what we want to do when someone visits the particular route
 
-// Home page
+// Home page route w/hbs
 app.get("", (request, response) => {
-  response.send("<h1>This is the Home Page.</h1>");
+  // name of view to render is the first argument, values we want to access is the second
+  response.render("index", {
+    title: "Weather App",
+    name: "mgermaine93",
+  });
 });
 
-// Weather page
+app.get("/about", (request, response) => {
+  response.render("about", {
+    title: "About",
+    name: "mgermaine93",
+  });
+});
+
+app.get("/help", (request, response) => {
+  response.render("help", {
+    title: "Help",
+    message: "Hello there, I'm a help message!",
+    name: "mgermaine93",
+  });
+});
+
+// Weather page route
 app.get("/weather", (request, response) => {
   response.send({
     forecast: "forecast",

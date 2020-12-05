@@ -60,6 +60,23 @@ app.get("/weather", (request, response) => {
   });
 });
 
+app.get("/help/*", (request, response) => {
+  response.render("404-page", {
+    title: "404",
+    name: "mgermaine93",
+    errorMessage: "Help article not found",
+  });
+});
+
+// 404 error page route (the "*" is a wildcard)
+app.get("*", (request, response) => {
+  response.render("404-page", {
+    title: "404",
+    name: "mgermaine93",
+    errorMessage: "Page not found",
+  });
+});
+
 // Has the app listen on a specific port
 app.listen(3000, () => {
   console.log("Server is up on port 3000");

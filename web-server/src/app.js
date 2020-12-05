@@ -4,18 +4,21 @@ const path = require("path");
 // "express" is a function, and we call it to create a new express application
 const express = require("express");
 
+// Load in HBS
+const hbs = require("hbs");
+
 // this actually creates the express application
 const app = express();
 
 // Defines the paths for the Express config
 const publicDirectoryPath = path.join(__dirname, "../public");
-const viewsPath = path.join(__dirname, "../templates");
+const viewsPath = path.join(__dirname, "../templates/views");
+const partialsPath = path.join(__dirname, "../templates/partials");
 
-// Sets up the "handlebars" engine
+// Sets up the "handlebars" engine and the views location
 app.set("view engine", "hbs");
-
-// Sets up the views location
 app.set("views", viewsPath);
+hbs.registerPartials(partialsPath);
 
 // This serves up the contents of the public, static directory
 app.use(express.static(publicDirectoryPath));
@@ -32,6 +35,7 @@ app.get("", (request, response) => {
   });
 });
 
+// About page route
 app.get("/about", (request, response) => {
   response.render("about", {
     title: "About",
@@ -39,10 +43,11 @@ app.get("/about", (request, response) => {
   });
 });
 
+// Help page route
 app.get("/help", (request, response) => {
   response.render("help", {
     title: "Help",
-    message: "Hello there, I'm a help message!",
+    helpMessage: "Hello there, I'm a help message!",
     name: "mgermaine93",
   });
 });

@@ -9,10 +9,11 @@
 </head>
 
 <body>
+    <!-- Loads in the partial -->
+    {{>header}}
     <!-- Injects a value into a handlebars file -->
-    <h1>{{title}}</h1>
-    <p>Created by {{name}}</p>
-    <p>{{message}}</p>
+    {{helpMessage}}
+    {{>footer}}
 </body>
 
 </html>

@@ -6,12 +6,18 @@ const express = require("express");
 
 // this actually creates the express application
 const app = express();
-const publicDirectoryPath = path.join(__dirname, "../public");
 
-// This gets the "handlebars" module set up
+// Defines the paths for the Express config
+const publicDirectoryPath = path.join(__dirname, "../public");
+const viewsPath = path.join(__dirname, "../templates");
+
+// Sets up the "handlebars" engine
 app.set("view engine", "hbs");
 
-// This serves up the contents of the public directory
+// Sets up the views location
+app.set("views", viewsPath);
+
+// This serves up the contents of the public, static directory
 app.use(express.static(publicDirectoryPath));
 
 // this tells the server what to send back

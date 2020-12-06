@@ -5,14 +5,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./css/styles.css" />
-    <title>Weather App</title>
+    <link rel="icon" href="/img/weather.png">
+    <title>About</title>
 </head>
 
 <body>
-    <!-- Loads in the partial -->
-    {{>header}}
-    <!-- Injects a value into a handlebars file -->
-    <img src="/img/trees.jpg" alt="Colorado Trees" />
+    <div class="main-content">
+        {{>header}}
+        <!-- Injects a value into a handlebars file -->
+        <img class="mountain" src="/img/IMG_0555.JPG" alt="Colorado Trees" />
+    </div>
+
     {{>footer}}
 
 </body>

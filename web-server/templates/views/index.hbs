@@ -7,12 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="/js/app.js"></script>
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="icon" href="/img/weather.png">
     <title>Weather App</title>
 </head>
 
 <body>
-    <!-- Loads in the partial -->
-    {{>header}}
+    <div class="main-content">
+        {{>header}}
+
+        <p>Use this site to get your local weather!</p>
+    </div>
     <!-- Injects a value into a handlebars file -->
     {{>footer}}
 </body>

@@ -7,6 +7,10 @@ const express = require("express");
 // Load in HBS
 const hbs = require("hbs");
 
+// Load in the functions
+const geocode = require("./utils/geocode");
+const forecast = require("./utils/forecast");
+
 // this actually creates the express application
 const app = express();
 
@@ -58,13 +62,25 @@ app.get("/weather", (request, response) => {
   if (!request.query.address) {
     return response.send({ error: "You must provide an address to search." });
   }
-  console.log(request.query);
-  // Address?  Send back the static JSON
-  response.send({
-    forecast: "It is cold",
-    location: "Pittsburgh",
-    // Add address property onto JSON which returns the provided address
-    address: request.query.address,
+
+  // Use the address to geocode
+  geocode(request.query.address, (error, { latitude, longitude, location }) => {
+    if (error) {
+      return response.send({ error: error });
+    }
+    // latitude, longitude, function
+    forecast(latitude, longitude, (error, forecastData) => {
+      // Callback chaining in action
+      if (error) {
+        return response.send({ error: error });
+      }
+      // This is what runs if BOTH requests work successfully
+      response.send({
+        forecast: forecastData,
+        location: location,
+        address: request.query.address,
+      });
+    });
   });
 });
 
@@ -79,7 +95,6 @@ app.get("/products", (request, response) => {
       error: "You must provide a search term.",
     });
   }
-  console.log(request.query);
   response.send({
     products: [],
   });

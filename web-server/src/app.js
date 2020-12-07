@@ -54,9 +54,34 @@ app.get("/help", (request, response) => {
 
 // Weather page route
 app.get("/weather", (request, response) => {
+  // No address?  Send back an error message
+  if (!request.query.address) {
+    return response.send({ error: "You must provide an address to search." });
+  }
+  console.log(request.query);
+  // Address?  Send back the static JSON
   response.send({
-    forecast: "forecast",
-    location: "location",
+    forecast: "It is cold",
+    location: "Pittsburgh",
+    // Add address property onto JSON which returns the provided address
+    address: request.query.address,
+  });
+});
+
+// SAMPLE JSON REQUEST
+app.get("/products", (request, response) => {
+  // "request" is an object
+  // query strings are parsed by express
+
+  if (!request.query.search) {
+    // A JavaScript error will occur if you try to send two responses back from a request -- this is solved with "return"
+    return response.send({
+      error: "You must provide a search term.",
+    });
+  }
+  console.log(request.query);
+  response.send({
+    products: [],
   });
 });
 

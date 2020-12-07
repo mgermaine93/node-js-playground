@@ -28,7 +28,7 @@ const book = {
 // console.log(author);
 // console.log(salePrice);
 
-const transaction = (type, { title, author }) => {
+const transaction = (type, { title, author } = {}) => {
   console.log(type, title, author);
 };
 

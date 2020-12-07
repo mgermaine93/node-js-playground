@@ -64,24 +64,27 @@ app.get("/weather", (request, response) => {
   }
 
   // Use the address to geocode
-  geocode(request.query.address, (error, { latitude, longitude, location }) => {
-    if (error) {
-      return response.send({ error: error });
-    }
-    // latitude, longitude, function
-    forecast(latitude, longitude, (error, forecastData) => {
-      // Callback chaining in action
+  geocode(
+    request.query.address,
+    (error, { latitude, longitude, location } = {}) => {
       if (error) {
         return response.send({ error: error });
       }
-      // This is what runs if BOTH requests work successfully
-      response.send({
-        forecast: forecastData,
-        location: location,
-        address: request.query.address,
+      // latitude, longitude, function
+      forecast(latitude, longitude, (error, forecastData) => {
+        // Callback chaining in action
+        if (error) {
+          return response.send({ error: error });
+        }
+        // This is what runs if BOTH requests work successfully
+        response.send({
+          forecast: forecastData,
+          location: location,
+          address: request.query.address,
+        });
       });
-    });
-  });
+    }
+  );
 });
 
 // SAMPLE JSON REQUEST

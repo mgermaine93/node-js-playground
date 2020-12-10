@@ -87,21 +87,21 @@ app.get("/weather", (request, response) => {
   );
 });
 
-// SAMPLE JSON REQUEST
-app.get("/products", (request, response) => {
-  // "request" is an object
-  // query strings are parsed by express
+// // SAMPLE JSON REQUEST
+// app.get("/products", (request, response) => {
+//   // "request" is an object
+//   // query strings are parsed by express
 
-  if (!request.query.search) {
-    // A JavaScript error will occur if you try to send two responses back from a request -- this is solved with "return"
-    return response.send({
-      error: "You must provide a search term.",
-    });
-  }
-  response.send({
-    products: [],
-  });
-});
+//   if (!request.query.search) {
+//     // A JavaScript error will occur if you try to send two responses back from a request -- this is solved with "return"
+//     return response.send({
+//       error: "You must provide a search term.",
+//     });
+//   }
+//   response.send({
+//     products: [],
+//   });
+// });
 
 app.get("/help/*", (request, response) => {
   response.render("404-page", {

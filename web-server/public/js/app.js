@@ -25,8 +25,9 @@ weatherForm.addEventListener("submit", (e) => {
       // this function runs when the JSON data has arrived and been parsed
       response.json().then((data) => {
         if (data.error) {
-          messageOne.textContent = "Loading...";
-          //messageOne.textContent = data.error;
+          // Why does this not print anything out??? //
+          messageOne.textContent = data.error;
+          /////////////////////////////////////////////
         }
         messageOne.textContent = data.forecast;
         messageTwo.textContent = data.location;

@@ -16,10 +16,14 @@ body {
   min-height: 100vh;
 }
 
+/* Main content */
+
 .main-content {
   /* The element will take up all leftover space */
   flex-grow: 1;
 }
+
+/* Footer */
 
 footer {
   color: #888888;
@@ -28,6 +32,20 @@ footer {
   padding: 16px 0;
 }
 
+footer p a {
+  text-decoration: none;
+  color: #888888;
+}
+
+footer p a:hover {
+  background: rgb(135, 206, 250, 0.5);
+  padding-top: 10px;
+  padding-bottom: 10px;
+  transition: 0.3s;
+  color: black;
+}
+
+/* Header */
 header {
   margin-top: 16px;
   margin-bottom: 48px;
@@ -49,14 +67,20 @@ header a:hover {
   color: #333333;
 }
 
+/* Photo */
+
 .mountain {
   width: 250px;
 }
+
+/* Input box */
 
 input {
   border: 1px solid #cccccc;
   padding: 8px;
 }
+
+/* Button */
 
 button {
   cursor: pointer;
@@ -69,5 +93,6 @@ button {
 }
 
 button:hover {
-  opacity: 1;
+  background: #008000;
+  transition: 0.5s;
 }

@@ -14,6 +14,9 @@ const forecast = require("./utils/forecast");
 // this actually creates the express application
 const app = express();
 
+// Sets the port equal to the environment variable value
+const port = process.env.PORT || 3000;
+
 // Defines the paths for the Express config
 const publicDirectoryPath = path.join(__dirname, "../public");
 const viewsPath = path.join(__dirname, "../templates/views");
@@ -87,22 +90,6 @@ app.get("/weather", (request, response) => {
   );
 });
 
-// // SAMPLE JSON REQUEST
-// app.get("/products", (request, response) => {
-//   // "request" is an object
-//   // query strings are parsed by express
-
-//   if (!request.query.search) {
-//     // A JavaScript error will occur if you try to send two responses back from a request -- this is solved with "return"
-//     return response.send({
-//       error: "You must provide a search term.",
-//     });
-//   }
-//   response.send({
-//     products: [],
-//   });
-// });
-
 app.get("/help/*", (request, response) => {
   response.render("404-page", {
     title: "404",
@@ -121,8 +108,8 @@ app.get("*", (request, response) => {
 });
 
 // Has the app listen on a specific port
-app.listen(3000, () => {
-  console.log("Server is up on port 3000");
+app.listen(port, () => {
+  console.log(`Server is up on port ${port}`);
 });
 
 // To run, cd into "web-server" directory and run "node src/app.js"

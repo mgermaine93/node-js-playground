@@ -20,19 +20,17 @@ weatherForm.addEventListener("submit", (e) => {
   messageTwo.textContent = "Retrieving your weather...";
 
   // "fetch data from this url and then run this function"
-  fetch(`http://localhost:3000/weather?address=${location}`).then(
-    (response) => {
-      // this function runs when the JSON data has arrived and been parsed
-      response.json().then((data) => {
-        if (data.error) {
-          // Opens an alert "box" in the browser.
-          window.alert(data.error);
-          // No idea what this doesn't work...
-          messageTwo.textContent = data.error;
-        }
-        messageTwo.textContent = data.location;
-        messageOne.textContent = data.forecast;
-      });
-    }
-  );
+  fetch(`/weather?address=${location}`).then((response) => {
+    // this function runs when the JSON data has arrived and been parsed
+    response.json().then((data) => {
+      if (data.error) {
+        // Opens an alert "box" in the browser.
+        window.alert(data.error);
+        // No idea what this doesn't work...
+        messageTwo.textContent = data.error;
+      }
+      messageTwo.textContent = data.location;
+      messageOne.textContent = data.forecast;
+    });
+  });
 });

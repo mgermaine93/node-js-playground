@@ -5,7 +5,7 @@ const path = require("path");
 const express = require("express");
 
 // Load in HBS
-const exphbs = require("express-handlebars");
+const hbs = require("hbs");
 
 // Load in the functions
 const geocode = require("./utils/geocode");
@@ -23,10 +23,9 @@ const viewsPath = path.join(__dirname, "../templates/views");
 const partialsPath = path.join(__dirname, "../templates/partials");
 
 // Sets up the "handlebars" engine and the views location
-app.engine("handlebars", exphbs({ extname: ".hbs" }));
-app.set("view engine", ".hbs");
+app.set("view engine", "hbs");
 app.set("views", viewsPath);
-exphbs.registerPartials(partialsPath);
+hbs.registerPartials(partialsPath);
 
 // This serves up the contents of the public, static directory
 app.use(express.static(publicDirectoryPath));

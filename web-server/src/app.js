@@ -5,7 +5,7 @@ const path = require("path");
 const express = require("express");
 
 // Load in HBS
-const hbs = require("hbs");
+const exphbs = require("express-handlebars");
 
 // Load in the functions
 const geocode = require("./utils/geocode");
@@ -13,6 +13,7 @@ const forecast = require("./utils/forecast");
 
 // this actually creates the express application
 const app = express();
+const hbs = exphbs.create({});
 
 // Sets the port equal to the environment variable value
 const port = process.env.PORT || 3000;
@@ -23,6 +24,7 @@ const viewsPath = path.join(__dirname, "../templates/views");
 const partialsPath = path.join(__dirname, "../templates/partials");
 
 // Sets up the "handlebars" engine and the views location
+app.engine("handlebars", hbs.engine);
 app.set("view engine", "hbs");
 app.set("views", viewsPath);
 hbs.registerPartials(partialsPath);

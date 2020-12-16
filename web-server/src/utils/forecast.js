@@ -16,11 +16,12 @@ const forecast = (latitude, longitude, callback) => {
       callback("Unable to find location.  Try another search?", undefined);
     } else {
       const weatherOutlook = body.weather[0].main;
-      const mainTemp = body.main.temp;
-      const feelsLikeTemp = body.main.feels_like;
+      const weatherDescription = body.weather[0].description;
+      const mainTemp = Math.round(body.main.temp);
+      const feelsLikeTemp = Math.round(body.main.feels_like);
       callback(
         undefined,
-        `${weatherOutlook}.  It is currently ${mainTemp} degrees Fahrenheit outside, but it feels like ${feelsLikeTemp} degrees Fahrenheit.`
+        `${weatherOutlook}, ${weatherDescription}.  It is currently ${mainTemp} degrees Fahrenheit outside, but it feels like ${feelsLikeTemp} degrees Fahrenheit.`
       );
     }
   });

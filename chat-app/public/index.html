@@ -6,14 +6,10 @@
     <title>Chat App</title>
   </head>
   <body>
-    <h1>Chat App</h1>
-    <form id="message-form">
-      <input name="message" placeholder="Write your message here" />
-      <button>Send</button>
-    </form>
-    <button id="send-location">Send location</button>
-    <!-- Load in the client-side version of the library -->
+    <p>This is the Chat App!</p>
+    <!-- This is the client-side version of the Socket.io library -->
     <script src="/socket.io/socket.io.js"></script>
+    <!-- This connects to the chat.js script, which has access to the "io()" function thanks to the call above -->
     <script src="/js/chat.js"></script>
   </body>
 </html>

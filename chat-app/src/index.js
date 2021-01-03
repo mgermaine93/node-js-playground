@@ -1,3 +1,5 @@
+// SERVER
+
 // Load in the core "path" module
 const path = require('path');
 const http = require('http');
@@ -17,9 +19,22 @@ const publicDirectoryPath = path.join(__dirname, '../public');
 // Serves up the public directory path
 app.use(express.static(publicDirectoryPath));
 
-// Print a message to the terminal when a client connects
-io.on('connection', () => {
+let count = 0;
+
+// server (emit) -> client (receive) - countUpdated
+// client (emit) -> server (receive) - increment
+
+// Print a message to the terminal each time a client connects
+io.on('connection', (socket) => {
     console.log("New web socket connection!");
+    // Sends an event from the server to the client.
+    // The arguments passed in here are accessible in chat.js
+    socket.emit('countUpdated', count);
+    socket.on('increment', () => {
+        count++;
+        // Send the updated count to every connection
+        io.emit('countUpdated', count);
+    })
 });
 
 // Start up the actual server

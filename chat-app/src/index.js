@@ -19,7 +19,7 @@ const publicDirectoryPath = path.join(__dirname, '../public');
 // Serves up the public directory path
 app.use(express.static(publicDirectoryPath));
 
-let count = 0;
+// let count = 0;
 
 // server (emit) -> client (receive) - countUpdated
 // client (emit) -> server (receive) - increment
@@ -27,13 +27,14 @@ let count = 0;
 // Print a message to the terminal each time a client connects
 io.on('connection', (socket) => {
     console.log("New web socket connection!");
-    // Sends an event from the server to the client.
-    // The arguments passed in here are accessible in chat.js
-    socket.emit('countUpdated', count);
-    socket.on('increment', () => {
-        count++;
-        // Send the updated count to every connection
-        io.emit('countUpdated', count);
+    
+    // Have the server emit a message when a new client connects
+    socket.emit('message', "Welcome!");
+
+    // Have the server listen for "sendMessage"
+    socket.on('sendMessage', (message) => {
+        // Send the message to ALL connected clients
+        io.emit('message', message)
     })
 });
 

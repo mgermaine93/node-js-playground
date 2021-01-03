@@ -7,7 +7,18 @@
   </head>
   <body>
     <p>This is the Chat App!</p>
-    <button id="increment">+1</button>
+    <!-- Create a form with an input and button -->
+    <form id="message-form">
+      <label for="message">Message:</label><br />
+      <input
+        type="text"
+        id="message"
+        name="message"
+        placeholder="Your message here"
+      /><br />
+      <input type="submit" id="submit" value="Submit" />
+      <!-- <button>Send</button> -->
+    </form>
     <!-- This is the client-side version of the Socket.io library -->
     <script src="/socket.io/socket.io.js"></script>
     <!-- This connects to the chat.js script, which has access to the "io()" function thanks to the call above -->

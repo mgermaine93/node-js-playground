@@ -31,11 +31,20 @@ io.on('connection', (socket) => {
     // Have the server emit a message when a new client connects
     socket.emit('message', "Welcome!");
 
+    // Have the server emit a message to everyone BUT the new user when the new user joins
+    socket.broadcast.emit('message', "A new user has joined!");
+
     // Have the server listen for "sendMessage"
     socket.on('sendMessage', (message) => {
         // Send the message to ALL connected clients
         io.emit('message', message)
     })
+
+    // Have the server emit a message to everyone once one user has disconnected
+    // (The disconnected user won't get this because they're disconnected)
+    socket.on('disconnect', (message) => {
+        io.emit('message', "A user has left the chat.")
+    });
 });
 
 // Start up the actual server

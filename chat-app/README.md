@@ -19,3 +19,5 @@ The Socket.io library provides everything needed to set up the server in node.js
 "io.emit" SENDS events to every connection that is available, not just single connections.
 
 Arguments that are passed in to "socket.emit" are also accessible through "socket.on". To do so, the arguments should have the same name each time they are sent/received.
+
+"Broadcasting" events sends the event to everyone EXCEPT the current client. (Ideal for new users in chat rooms, etc.)

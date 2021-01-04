@@ -7,6 +7,8 @@ const http = require('http');
 const express = require('express');
 // Load in the Socket.io library
 const socketio = require('socket.io');
+// Load in "Bad Words" library
+const Filter = require('bad-words');
 
 // Configure the server and get it up and running
 const app = express();
@@ -35,16 +37,25 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('message', "A new user has joined!");
 
     // Have the server listen for "sendMessage"
-    socket.on('sendMessage', (message) => {
+    socket.on('sendMessage', (message, callback) => {
+        // Initialize bad words
+        const filter = new Filter();
+        if (filter.isProfane(message)) {
+            return callback('Hey, language!');
+        }
         // Send the message to ALL connected clients
-        io.emit('message', message)
+        io.emit('message', message);
+        // This send the event acknowledgment to everyone
+        callback('Delivered!');
     })
 
     // Have the server listen for "sendLocation"
-    socket.on('sendLocation', (coords) => {
+    socket.on('sendLocation', (coords, callback) => {
 
         // When fired, send a "message" to all connected clients "Location: lat, long"
         io.emit('message', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`);
+        // Sets up the server to send back the acknowledgment
+        callback()
     })
 
     // Have the server emit a message to everyone once one user has disconnected

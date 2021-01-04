@@ -21,3 +21,7 @@ The Socket.io library provides everything needed to set up the server in node.js
 Arguments that are passed in to "socket.emit" are also accessible through "socket.on". To do so, the arguments should have the same name each time they are sent/received.
 
 "Broadcasting" events sends the event to everyone EXCEPT the current client. (Ideal for new users in chat rooms, etc.)
+
+Event acknowledgments require changes on both the client AND server. Whoever emits the event (client or server) sets up a callback function, and whoever receives the event receives the callback function that it in turn needs to call.
+
+A good use case for event acknowledgments are for message validations.

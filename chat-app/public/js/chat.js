@@ -15,7 +15,13 @@ document.querySelector('#message-form').addEventListener('submit', (e) => {
     // const message = document.querySelector("#message").value;
     const message = e.target.elements.message.value;
     // Emit "sendMessage" with input string as message data
-    socket.emit('sendMessage', message);
+    socket.emit('sendMessage', message, (error) => {
+        // This runs when the event is acknowledged
+        if (error) {
+            return console.log(error)
+        }
+        console.log("Message delivered!")
+    });
 });
 
 // Not every browser supports this geolocation feature, which is why the error message is included
@@ -30,6 +36,10 @@ document.querySelector('#send-location').addEventListener('click', () => {
         socket.emit('sendLocation', {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
+            // Sets up the client acknowledgment function
+        }, () => {
+            // Have the client print "Location shared!" when acknowledged
+            console.log("Location shared!")
         });
     })
 

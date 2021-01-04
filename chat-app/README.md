@@ -22,6 +22,6 @@ Arguments that are passed in to "socket.emit" are also accessible through "socke
 
 "Broadcasting" events sends the event to everyone EXCEPT the current client. (Ideal for new users in chat rooms, etc.)
 
-Event acknowledgments require changes on both the client AND server. Whoever emits the event (client or server) sets up a callback function, and whoever receives the event receives the callback function that it in turn needs to call.
+Event acknowledgments require changes on both the client AND server. Whoever emits the event (client or server) sets up a callback function, and whoever receives the event receives the callback function that it in turn needs to call. A good use case for event acknowledgments are for message validations.
 
-A good use case for event acknowledgments are for message validations.
+The Mustache library is helpful for rendering messages to the UI.

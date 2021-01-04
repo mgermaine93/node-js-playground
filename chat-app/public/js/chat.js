@@ -8,12 +8,11 @@ const $messageForm = document.querySelector('#message-form');
 const $messageFormInput = $messageForm.querySelector('input');
 const $messageFormButton = $messageForm.querySelector('#submit');
 const $sendLocationButton = document.querySelector('#send-location');
-
-// This is the location where the template is rendered
 const $messages = document.querySelector('#messages');
 
 // Templates
-messageTemplate = document.querySelector('#message-template').innerHTML;
+const messageTemplate = document.querySelector('#message-template').innerHTML;
+const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML;
 
 // Have the client listen for the "message" and print it to the console
 socket.on('message', (message) => {
@@ -23,6 +22,19 @@ socket.on('message', (message) => {
     const html = Mustache.render(messageTemplate, {
         message
     });
+
+    // This adds stuff inside the messages div, specifically at the bottom INSIDE of the div
+    $messages.insertAdjacentHTML('beforeend', html);
+})
+
+// Have the client listen for "locationMessage" and print the URL to the console
+socket.on('locationMessage', (locationMessageUrl) => {
+    console.log(locationMessageUrl);
+
+    // This is the final HTML that is rendered in the browser
+    const html = Mustache.render(locationMessageTemplate, {
+        locationMessageUrl
+    })
 
     // This adds stuff inside the messages div, specifically at the bottom INSIDE of the div
     $messages.insertAdjacentHTML('beforeend', html);
@@ -81,6 +93,4 @@ document.querySelector('#send-location').addEventListener('click', () => {
             console.log("Location shared!")
         });
     })
-
-    
 })

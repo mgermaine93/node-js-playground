@@ -25,10 +25,23 @@
     </form>
     <button id="send-location">Send Location</button>
 
+    <!-- This is the message template -->
     <script id="message-template" type="text/html">
       <div>
         <!-- This renders the actual message text inside the div -->
         <p>{{message}}</p>
+      </div>
+    </script>
+
+    <!-- This is the location template -->
+    <script id="location-message-template" type="text/html">
+      <div>
+        <!-- This renders the actual message text inside the div -->
+        <p>
+          <a href="{{locationMessageUrl}}" target="_blank"
+            >My current location</a
+          >
+        </p>
       </div>
     </script>
 

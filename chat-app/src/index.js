@@ -52,8 +52,8 @@ io.on('connection', (socket) => {
     // Have the server listen for "sendLocation"
     socket.on('sendLocation', (coords, callback) => {
 
-        // When fired, send a "message" to all connected clients "Location: lat, long"
-        io.emit('message', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`);
+        // When fired, have the server emit "locationMessage" with the a google URL
+        io.emit('locationMessage', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`);
         // Sets up the server to send back the acknowledgment
         callback()
     })

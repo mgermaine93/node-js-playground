@@ -23,7 +23,6 @@ socket.on('message', (message) => {
         message: message.text,
         // Moment.js formats the timestamp in a human-readable way
         createdAt: moment(message.createdAt).format("dddd, D MMMM YYYY, h:mm:ss a")
-        // moment(message.createdAt).format("dddd, D MMMM YYYY, h:mm:ss a")
     });
 
     // This adds stuff inside the messages div, specifically at the bottom INSIDE of the div
@@ -31,12 +30,13 @@ socket.on('message', (message) => {
 })
 
 // Have the client listen for "locationMessage" and print the URL to the console
-socket.on('locationMessage', (locationMessageUrl) => {
-    console.log(locationMessageUrl);
+socket.on('locationMessage', (message) => {
+    console.log(message);
 
     // This is the final HTML that is rendered in the browser
     const html = Mustache.render(locationMessageTemplate, {
-        locationMessageUrl
+        locationMessageUrl: message.locationMessageUrl,
+        createdAt: moment(message.createdAt).format("dddd, D MMMM YYYY, h:mm:ss a")
     })
 
     // This adds stuff inside the messages div, specifically at the bottom INSIDE of the div

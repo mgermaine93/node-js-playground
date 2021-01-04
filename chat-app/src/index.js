@@ -8,7 +8,7 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const Filter = require('bad-words');
-const { generateMessage } = require('./utils/messages');
+const { generateMessage, generateLocationMessage } = require('./utils/messages');
 
 // Configure the server and get it up and running
 const app = express();
@@ -52,8 +52,8 @@ io.on('connection', (socket) => {
     // Have the server listen for "sendLocation"
     socket.on('sendLocation', (coords, callback) => {
 
-        // When fired, have the server emit "locationMessage" with the a google URL
-        io.emit('locationMessage', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`);
+        // When fired, have the server emit "locationMessage" with a google URL
+        io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`));
         // Sets up the server to send back the acknowledgment
         callback()
     })

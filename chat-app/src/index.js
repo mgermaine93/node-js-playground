@@ -2,13 +2,13 @@
 
 // Load in the core "path" module
 const path = require('path');
+
+// Other modules and libraries
 const http = require('http');
-// Load in the express library
 const express = require('express');
-// Load in the Socket.io library
 const socketio = require('socket.io');
-// Load in "Bad Words" library
 const Filter = require('bad-words');
+const { generateMessage } = require('./utils/messages');
 
 // Configure the server and get it up and running
 const app = express();
@@ -31,10 +31,10 @@ io.on('connection', (socket) => {
     console.log("New web socket connection!");
     
     // Have the server emit a message when a new client connects
-    socket.emit('message', "Welcome!");
+    socket.emit('message', generateMessage("Welcome!"));
 
     // Have the server emit a message to everyone BUT the new user when the new user joins
-    socket.broadcast.emit('message', "A new user has joined!");
+    socket.broadcast.emit('message', generateMessage("A new user has joined!"));
 
     // Have the server listen for "sendMessage"
     socket.on('sendMessage', (message, callback) => {
@@ -44,9 +44,9 @@ io.on('connection', (socket) => {
             return callback('Hey, language!');
         }
         // Send the message to ALL connected clients
-        io.emit('message', message);
+        io.emit('message', generateMessage(message));
         // This send the event acknowledgment to everyone
-        callback('Delivered!');
+        callback();
     })
 
     // Have the server listen for "sendLocation"
@@ -60,8 +60,8 @@ io.on('connection', (socket) => {
 
     // Have the server emit a message to everyone once one user has disconnected
     // (The disconnected user won't get this because they're disconnected)
-    socket.on('disconnect', (message) => {
-        io.emit('message', "A user has left the chat.")
+    socket.on('disconnect', () => {
+        io.emit('message', generateMessage("A user has left the chat."))
     });
 });
 

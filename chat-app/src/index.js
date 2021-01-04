@@ -40,6 +40,13 @@ io.on('connection', (socket) => {
         io.emit('message', message)
     })
 
+    // Have the server listen for "sendLocation"
+    socket.on('sendLocation', (coords) => {
+
+        // When fired, send a "message" to all connected clients "Location: lat, long"
+        io.emit('message', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`);
+    })
+
     // Have the server emit a message to everyone once one user has disconnected
     // (The disconnected user won't get this because they're disconnected)
     socket.on('disconnect', (message) => {

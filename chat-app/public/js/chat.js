@@ -14,6 +14,10 @@ const $messages = document.querySelector('#messages');
 const messageTemplate = document.querySelector('#message-template').innerHTML;
 const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML;
 
+// Options
+// This uses the "QS" object to return an object
+const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true });  
+
 // Have the client listen for the "message" and print it to the console
 socket.on('message', (message) => {
     console.log(message);
@@ -97,3 +101,6 @@ document.querySelector('#send-location').addEventListener('click', () => {
         });
     })
 })
+
+// Accepts the username and the room the user wants to join
+socket.emit('join', { username, room })

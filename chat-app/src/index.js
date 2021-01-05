@@ -21,20 +21,21 @@ const publicDirectoryPath = path.join(__dirname, '../public');
 // Serves up the public directory path
 app.use(express.static(publicDirectoryPath));
 
-// let count = 0;
-
-// server (emit) -> client (receive) - countUpdated
-// client (emit) -> server (receive) - increment
-
 // Print a message to the terminal each time a client connects
 io.on('connection', (socket) => {
     console.log("New web socket connection!");
-    
-    // Have the server emit a message when a new client connects
-    socket.emit('message', generateMessage("Welcome!"));
 
-    // Have the server emit a message to everyone BUT the new user when the new user joins
-    socket.broadcast.emit('message', generateMessage("A new user has joined!"));
+    // Have the server listen for "join"
+    socket.on('join', ({ username, room }) => {
+        // Passes in the room the user is trying to join
+        socket.join(room)
+
+        // Have the server emit a message when a new client connects
+        socket.emit('message', generateMessage("Welcome!"));
+
+        // Have the server emit a message to everyone BUT the new user when the new user joins
+        socket.broadcast.to(room).emit('message', generateMessage(`${username} has joined!`));
+    })
 
     // Have the server listen for "sendMessage"
     socket.on('sendMessage', (message, callback) => {
@@ -44,7 +45,7 @@ io.on('connection', (socket) => {
             return callback('Hey, language!');
         }
         // Send the message to ALL connected clients
-        io.emit('message', generateMessage(message));
+        io.to('Point Breeze').emit('message', generateMessage(message));
         // This send the event acknowledgment to everyone
         callback();
     })

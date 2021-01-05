@@ -24,6 +24,12 @@ Arguments that are passed in to "socket.emit" are also accessible through "socke
 
 Event acknowledgments require changes on both the client AND server. Whoever emits the event (client or server) sets up a callback function, and whoever receives the event receives the callback function that it in turn needs to call. A good use case for event acknowledgments are for message validations.
 
-The Mustache template library is helpful for rendering messages to the UI.
+The Mustache template library is helpful for rendering message templates to the UI.
 
 Use Moment.js to format time into human-readable formats.
+
+Use QS to parse query strings.
+
+"io.to.emit" sends an event to everyone in a SPECIFIC room without sending it to OTHER rooms
+
+"socket.broadcast.to.emit" sends an event to everyone BUT the specific client within a SPECIFIC chat room.

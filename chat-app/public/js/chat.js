@@ -6,7 +6,7 @@ const socket = io();
 // Elements (these come from the DOM, $ is convention)
 const $messageForm = document.querySelector('#message-form');
 const $messageFormInput = $messageForm.querySelector('input');
-const $messageFormButton = $messageForm.querySelector('#submit');
+const $messageFormButton = $messageForm.querySelector('button');
 const $sendLocationButton = document.querySelector('#send-location');
 const $messages = document.querySelector('#messages');
 

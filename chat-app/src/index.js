@@ -41,23 +41,30 @@ io.on('connection', (socket) => {
         socket.join(user.room)
 
         // Have the server emit a message when a new client connects
-        socket.emit('message', generateMessage("Welcome!"));
+        socket.emit('message', generateMessage("Admin", "Welcome!"));
 
         // Have the server emit a message to everyone BUT the new user when the new user joins
-        socket.broadcast.to(user.room).emit('message', generateMessage(`${user.username} has joined!`));
+        socket.broadcast.to(user.room).emit('message', generateMessage("Admin", `${user.username} has joined!`));
 
         callback()
     })
 
+
+
+
     // Have the server listen for "sendMessage"
     socket.on('sendMessage', (message, callback) => {
+
+        // Use getUser inside "sendMessage" event handler to get user data
+        const user = getUser(socket.id)
+
         // Initialize bad words
         const filter = new Filter();
         if (filter.isProfane(message)) {
             return callback('Hey, language!');
         }
-        // Send the message to ALL connected clients
-        io.to('Point Breeze').emit('message', generateMessage(message));
+        // Send the message to ALL connected clients in the current room
+        io.to(user.room).emit('message', generateMessage(user.username, message));
         // This send the event acknowledgment to everyone
         callback();
     })
@@ -65,8 +72,11 @@ io.on('connection', (socket) => {
     // Have the server listen for "sendLocation"
     socket.on('sendLocation', (coords, callback) => {
 
-        // When fired, have the server emit "locationMessage" with a google URL
-        io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`));
+        // Use getUser inside "sendLocation" event handler to get user data
+        const user = getUser(socket.id)
+
+        // When fired, have the server emit "locationMessage" with a google URL to the user's room
+        io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `https://google.com/maps?q=${coords.latitude},${coords.longitude}`));
         // Sets up the server to send back the acknowledgment
         callback()
     })
@@ -77,7 +87,7 @@ io.on('connection', (socket) => {
         const user = removeUser(socket.id)
 
         if (user) {
-            io.to(user.room).emit('message', generateMessage(`${user.username} has left the chat.`))
+            io.to(user.room).emit('message', generateMessage("Admin", `${user.username} has left the chat.`))
         }
     });
 });

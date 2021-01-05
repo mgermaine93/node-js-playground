@@ -25,6 +25,8 @@
               id="message"
               name="message"
               placeholder="Your message here"
+              required
+              autocomplete="off"
             />
             <!-- <input type="submit" id="submit" value="Submit" /> -->
             <button id="submit">Send</button>
@@ -34,24 +36,24 @@
       </div>
     </div>
 
-    <!-- This is the message template -->
+    <!-- This is the MESSAGE template -->
     <script id="message-template" type="text/html">
       <div class="message">
         <!-- This renders the actual message text inside the div -->
         <p>
-          <span class="message__name">User Name</span>
+          <span class="message__name">{{username}}</span>
           <span class="message__meta">{{createdAt}}</span>
         </p>
         <p>{{message}}</p>
       </div>
     </script>
 
-    <!-- This is the location template -->
+    <!-- This is the LOCATION template -->
     <script id="location-message-template" type="text/html">
       <div>
         <!-- This renders the actual message text inside the div -->
         <p>
-          <span class="message__name">User Name</span>
+          <span class="message__name">{{username}}</span>
           <span class="message__meta">{{createdAt}}</span>
         </p>
         <p>{{message}}</p>

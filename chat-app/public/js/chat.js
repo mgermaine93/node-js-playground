@@ -24,6 +24,7 @@ socket.on('message', (message) => {
 
     // This is the final HTML that is rendered in the browser
     const html = Mustache.render(messageTemplate, {
+        username: message.username,
         message: message.text,
         // Moment.js formats the timestamp in a human-readable way
         createdAt: moment(message.createdAt).format("dddd, D MMMM YYYY, h:mm:ss a")
@@ -39,6 +40,7 @@ socket.on('locationMessage', (message) => {
 
     // This is the final HTML that is rendered in the browser
     const html = Mustache.render(locationMessageTemplate, {
+        username: message.username,
         locationMessageUrl: message.locationMessageUrl,
         createdAt: moment(message.createdAt).format("dddd, D MMMM YYYY, h:mm:ss a")
     })

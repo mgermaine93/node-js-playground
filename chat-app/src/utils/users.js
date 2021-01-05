@@ -21,7 +21,7 @@ const addUser = ({ id, username, room }) => {
     // Validate username
     if (existingUser) {
         return {
-            error: 'Username is already in use!'
+            error: `Username \"${existingUser.username}\" is already in use!  Try picking a different username.`
         }
     }
 

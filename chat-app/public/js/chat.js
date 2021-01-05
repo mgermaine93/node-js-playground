@@ -103,4 +103,10 @@ document.querySelector('#send-location').addEventListener('click', () => {
 })
 
 // Accepts the username and the room the user wants to join
-socket.emit('join', { username, room })
+socket.emit('join', { username, room }, (error) => {
+    if (error) {
+        alert(error)
+        // Redirect to home page
+        location.href = "/"
+    }
+})

@@ -9,6 +9,7 @@ const express = require('express');
 const socketio = require('socket.io');
 const Filter = require('bad-words');
 const { generateMessage, generateLocationMessage } = require('./utils/messages');
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 
 // Configure the server and get it up and running
 const app = express();
@@ -26,15 +27,26 @@ io.on('connection', (socket) => {
     console.log("New web socket connection!");
 
     // Have the server listen for "join"
-    socket.on('join', ({ username, room }) => {
+    socket.on('join', ({ username, room }, callback) => {
+
+        // Add the user to the users array
+        const { error, user } = addUser({ id: socket.id, username, room })
+
+        // Stops the program and lets the client know what went wrong if there's an error
+        if (error) {
+            return callback(error)
+        }
+
         // Passes in the room the user is trying to join
-        socket.join(room)
+        socket.join(user.room)
 
         // Have the server emit a message when a new client connects
         socket.emit('message', generateMessage("Welcome!"));
 
         // Have the server emit a message to everyone BUT the new user when the new user joins
-        socket.broadcast.to(room).emit('message', generateMessage(`${username} has joined!`));
+        socket.broadcast.to(user.room).emit('message', generateMessage(`${user.username} has joined!`));
+
+        callback()
     })
 
     // Have the server listen for "sendMessage"
@@ -62,7 +74,11 @@ io.on('connection', (socket) => {
     // Have the server emit a message to everyone once one user has disconnected
     // (The disconnected user won't get this because they're disconnected)
     socket.on('disconnect', () => {
-        io.emit('message', generateMessage("A user has left the chat."))
+        const user = removeUser(socket.id)
+
+        if (user) {
+            io.to(user.room).emit('message', generateMessage(`${user.username} has left the chat.`))
+        }
     });
 });
 

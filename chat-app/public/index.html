@@ -1,3 +1,4 @@
+<!-- This is the page that the user sees when deciding what chat room to join -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,65 +10,28 @@
     <link rel="icon" href="./img/favicon.png" />
   </head>
   <body>
-    <div class="chat">
-      <div class="chat__sidebar"></div>
-      <div class="chat__main">
-        <!-- This is where new messages will appear in the UI -->
-        <div class="chat__messages" id="messages"></div>
-
-        <div class="compose">
-          <!-- Create a form with an input and button -->
-          <form id="message-form">
-            <label for="message">Message:</label><br />
-            <input
-              type="text"
-              id="message"
-              name="message"
-              placeholder="Your message here"
-            />
-            <!-- <input type="submit" id="submit" value="Submit" /> -->
-            <button id="submit">Send</button>
-          </form>
-          <button id="send-location">Send Location</button>
-        </div>
+    <div class="centered-form">
+      <div class="centered-form__box">
+        <h1>Join</h1>
+        <!-- chat.html is the page that a user will be redirected to when they hit "Join" -->
+        <form action="/chat.html">
+          <label for="username">Display Name</label>
+          <input
+            type="text"
+            name="username"
+            placeholder="Pick a display name"
+            required
+          />
+          <label for="room">Room</label>
+          <input
+            type="text"
+            name="room"
+            placeholder="Pick a room to join"
+            required
+          />
+          <button>Join</button>
+        </form>
       </div>
     </div>
-
-    <!-- This is the message template -->
-    <script id="message-template" type="text/html">
-      <div class="message">
-        <!-- This renders the actual message text inside the div -->
-        <p>
-          <span class="message__name">User Name</span>
-          <span class="message__meta">{{createdAt}}</span>
-        </p>
-        <p>{{message}}</p>
-      </div>
-    </script>
-
-    <!-- This is the location template -->
-    <script id="location-message-template" type="text/html">
-      <div>
-        <!-- This renders the actual message text inside the div -->
-        <p>
-          <span class="message__name">User Name</span>
-          <span class="message__meta">{{createdAt}}</span>
-        </p>
-        <p>{{message}}</p>
-        <p>
-          <a href="{{locationMessageUrl}}" target="_blank"
-            >My current location</a
-          >
-        </p>
-      </div>
-    </script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
-    <!-- This is the client-side version of the Socket.io library -->
-    <script src="/socket.io/socket.io.js"></script>
-    <!-- This connects to the chat.js script, which has access to the "io()" function thanks to the call above -->
-    <script src="/js/chat.js"></script>
   </body>
 </html>

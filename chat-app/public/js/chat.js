@@ -17,7 +17,39 @@ const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML;
 
 // Options
 // This uses the "QS" object to return an object
-const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true });  
+const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true }); 
+
+// This is the function that implements autoscrolling when needed
+// It mainly figures out whether or not the user is near the bottom of the chat
+const autoscroll = () => {
+
+    // Get the new message element
+    const $newMessage = $messages.lastElementChild
+    
+    // Get the height of the new message
+    const newMessageStyles = getComputedStyle($newMessage)
+
+    // Extract the margin value
+    const newMessageMargin = parseInt(newMessageStyles.marginBottom)
+
+    // Add the height and margin together
+    const newMessageHeight = $newMessage.offsetHeight + newMessageMargin
+
+    // Get the "visible" height
+    const visibleHeight = $messages.offsetHeight
+
+    // Height of messages container
+    const containerHeight = $messages.scrollHeight
+
+    // How far have I scrolled?
+    const scrollOffset = $messages.scrollTop + visibleHeight
+
+    if (containerHeight - newMessageHeight <= scrollOffset) {
+        $messages.scrollTop = $messages.scrollHeight
+    }
+
+    console.log(newMessageMargin)
+}
 
 // Have the client listen for the "message" and print it to the console
 socket.on('message', (message) => {
@@ -33,6 +65,7 @@ socket.on('message', (message) => {
 
     // This adds stuff inside the messages div, specifically at the bottom INSIDE of the div
     $messages.insertAdjacentHTML('beforeend', html);
+    autoscroll()
 })
 
 // Have the client listen for "locationMessage" and print the URL to the console
@@ -48,6 +81,7 @@ socket.on('locationMessage', (message) => {
 
     // This adds stuff inside the messages div, specifically at the bottom INSIDE of the div
     $messages.insertAdjacentHTML('beforeend', html);
+    autoscroll()
 })
 
 socket.on('roomData', ({ room, users }) => {

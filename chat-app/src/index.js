@@ -40,17 +40,20 @@ io.on('connection', (socket) => {
         // Passes in the room the user is trying to join
         socket.join(user.room)
 
-        // Have the server emit a message when a new client connects
+        // Welcome the user
         socket.emit('message', generateMessage("Admin", "Welcome!"));
 
         // Have the server emit a message to everyone BUT the new user when the new user joins
         socket.broadcast.to(user.room).emit('message', generateMessage("Admin", `${user.username} has joined!`));
 
+        // Notifies everyone in the room, including the new user
+        io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUsersInRoom(user.room)
+        })
+
         callback()
     })
-
-
-
 
     // Have the server listen for "sendMessage"
     socket.on('sendMessage', (message, callback) => {
@@ -88,6 +91,10 @@ io.on('connection', (socket) => {
 
         if (user) {
             io.to(user.room).emit('message', generateMessage("Admin", `${user.username} has left the chat.`))
+            io.to(user.room).emit('roomData', {
+                room: user.room,
+                users: getUsersInRoom(user.room)
+            })
         }
     });
 });

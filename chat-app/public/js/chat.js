@@ -13,6 +13,7 @@ const $messages = document.querySelector('#messages');
 // Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML;
 const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML;
+const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML;
 
 // Options
 // This uses the "QS" object to return an object
@@ -47,6 +48,15 @@ socket.on('locationMessage', (message) => {
 
     // This adds stuff inside the messages div, specifically at the bottom INSIDE of the div
     $messages.insertAdjacentHTML('beforeend', html);
+})
+
+socket.on('roomData', ({ room, users }) => {
+    const html = Mustache.render(sidebarTemplate, {
+        room,
+        users
+    })
+    // Selects the sidebar and renders the list of users in it
+    document.querySelector('#sidebar').innerHTML = html
 })
 
 // Set-up an event listener for form submissions
